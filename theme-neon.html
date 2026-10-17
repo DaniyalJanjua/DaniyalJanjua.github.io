@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daniyal J. — Game Developer</title>
+<meta name="description" content="Unity & Unreal game developer — 3D games, gameplay systems, VR/AR and optimization.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060d; --bg2:#0a0d1c; --panel:rgba(14,18,38,.72); --line:rgba(120,140,255,.18);
+  --text:#e6e9ff; --muted:#8a90b8; --cyan:#00f0ff; --pink:#ff2bd6; --lime:#b6ff3b; --amber:#ffb020;
+  --grad:linear-gradient(90deg,var(--cyan),var(--pink));
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Rajdhani,system-ui,sans-serif;font-size:18px;line-height:1.55;overflow-x:hidden}
+body.loading{overflow:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--pink);color:#000}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:linear-gradient(var(--cyan),var(--pink));border-radius:4px}
+
+/* ---------- Loader ---------- */
+#loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;transition:clip-path 1s cubic-bezier(.77,0,.18,1)}
+#loader.done{clip-path:polygon(0 0,100% 0,100% 0,0 0)}
+.load-box{width:min(420px,84vw);font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
+.load-title{font-family:Orbitron;font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);letter-spacing:.12em;margin-bottom:22px}
+.load-title span{color:var(--cyan)}
+.bar{height:6px;background:#141a33;border-radius:3px;overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;width:0;background:var(--grad);box-shadow:0 0 18px var(--cyan)}
+.load-row{display:flex;justify-content:space-between}
+#loadLog{height:60px;overflow:hidden;margin-top:12px;opacity:.8}
+.press{margin-top:20px;font-family:Orbitron;font-size:13px;letter-spacing:.3em;color:var(--lime);opacity:0;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- Background ---------- */
+#bg{position:fixed;inset:0;z-index:-2}
+.grid-floor{position:fixed;left:-50%;right:-50%;bottom:-10vh;height:55vh;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:60px 60px;transform:perspective(400px) rotateX(70deg);transform-origin:bottom;
+  mask-image:linear-gradient(to top,#000 10%,transparent 90%);-webkit-mask-image:linear-gradient(to top,#000 10%,transparent 90%);
+  animation:floor 3s linear infinite;opacity:.55}
+@keyframes floor{to{background-position:0 60px}}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:90;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:89;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.6))}
+
+/* ---------- Cursor ---------- */
+.cursor,.cursor-dot{position:fixed;top:0;left:0;pointer-events:none;z-index:95;transform:translate(-50%,-50%)}
+.cursor{width:38px;height:38px;border:1.5px solid var(--cyan);border-radius:50%;transition:width .25s,height .25s,border-color .25s,background .25s;mix-blend-mode:screen}
+.cursor::before,.cursor::after{content:"";position:absolute;background:var(--cyan);left:50%;top:50%}
+.cursor::before{width:1px;height:10px;transform:translate(-50%,-26px)}
+.cursor::after{width:10px;height:1px;transform:translate(-26px,-50%)}
+.cursor.hover{width:64px;height:64px;border-color:var(--pink);background:rgba(255,43,214,.08)}
+.cursor-dot{width:5px;height:5px;background:var(--pink);border-radius:50%;box-shadow:0 0 10px var(--pink)}
+@media (hover:none){.cursor,.cursor-dot{display:none}}
+
+/* ---------- Nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(16px,4vw,48px);transition:background .3s,backdrop-filter .3s}
+nav.scrolled{background:rgba(5,6,13,.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.logo{font-family:Orbitron;font-weight:900;font-size:20px;letter-spacing:.1em}
+.logo b{color:var(--cyan)}
+.nav-links{display:flex;gap:28px;font-family:'JetBrains Mono',monospace;font-size:13px}
+.nav-links a{position:relative;color:var(--muted);transition:color .2s}
+.nav-links a span{color:var(--pink)}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--grad);transition:width .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.hp{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--lime)}
+.hp .bar{width:90px;margin:0}
+.hp .bar i{background:linear-gradient(90deg,var(--lime),var(--cyan));width:0}
+@media (max-width:820px){.nav-links{display:none}}
+
+/* ---------- Layout ---------- */
+section{position:relative;padding:120px clamp(16px,6vw,96px);max-width:1280px;margin:0 auto}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:56px;flex-wrap:wrap}
+.sec-num{font-family:'JetBrains Mono',monospace;color:var(--pink);font-size:14px}
+.sec-title{font-family:Orbitron;font-weight:900;font-size:clamp(30px,5vw,54px);letter-spacing:.02em;line-height:1}
+.sec-line{flex:1;min-width:60px;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+
+/* ---------- Hero ---------- */
+#hero{min-height:100vh;display:grid;align-items:center;padding-top:110px}
+.hero-inner{display:grid;grid-template-columns:1.3fr .9fr;gap:48px;align-items:center}
+@media (max-width:960px){.hero-inner{grid-template-columns:1fr}}
+.tag{display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border:1px solid var(--line);border-radius:30px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);background:var(--panel);backdrop-filter:blur(6px)}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.hero-name{font-family:Orbitron;font-weight:900;font-size:clamp(46px,9vw,118px);line-height:.92;margin:22px 0 14px;letter-spacing:-.01em}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;pointer-events:none}
+.glitch::before{color:var(--cyan);animation:g1 3.2s infinite steps(1);clip-path:inset(0 0 60% 0)}
+.glitch::after{color:var(--pink);animation:g2 2.7s infinite steps(1);clip-path:inset(55% 0 0 0)}
+@keyframes g1{0%,88%,100%{transform:none;opacity:0}89%{transform:translate(-4px,-2px);opacity:1}92%{transform:translate(3px,1px);opacity:1}95%{transform:translate(-2px,2px);opacity:1}}
+@keyframes g2{0%,84%,100%{transform:none;opacity:0}85%{transform:translate(4px,2px);opacity:1}88%{transform:translate(-3px,-1px);opacity:1}91%{transform:translate(2px,-2px);opacity:1}}
+.outline{-webkit-text-stroke:1.5px var(--text);color:transparent}
+.role{font-family:'JetBrains Mono',monospace;font-size:clamp(15px,2vw,20px);color:var(--cyan);min-height:1.6em}
+.role .caret{display:inline-block;width:10px;height:1.1em;background:var(--cyan);vertical-align:-3px;margin-left:3px;animation:blink 1s steps(2) infinite}
+.hero-text{color:var(--muted);max-width:560px;margin:22px 0 34px;font-size:19px}
+.btns{display:flex;gap:16px;flex-wrap:wrap}
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:15px 28px;font-family:Orbitron;font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);transition:transform .2s;overflow:hidden}
+.btn-primary{background:var(--grad);color:#05060d}
+.btn-primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.6) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s}
+.btn-primary:hover::after{transform:translateX(120%)}
+.btn-ghost{border:1px solid var(--cyan);color:var(--cyan);background:rgba(0,240,255,.05)}
+.btn-ghost:hover{background:rgba(0,240,255,.14)}
+.btn:hover{transform:translateY(-3px)}
+
+/* player card */
+.player{position:relative;padding:28px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);
+  clip-path:polygon(24px 0,100% 0,100% calc(100% - 24px),calc(100% - 24px) 100%,0 100%,0 24px);transform-style:preserve-3d;transition:transform .2s ease-out}
+.player::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,240,255,.12),transparent 40%,rgba(255,43,214,.12));pointer-events:none}
+.p-top{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.avatar{width:70px;height:70px;display:grid;place-items:center;font-family:Orbitron;font-weight:900;font-size:26px;color:#05060d;background:var(--grad);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.p-name{font-family:Orbitron;font-weight:700;font-size:18px}
+.p-class{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--lime)}
+.stat{margin:13px 0}
+.stat-row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.stat .bar{height:8px;margin-top:6px}
+.stat .bar i{transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.p-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:12px}
+.p-meta div{padding:10px;border:1px solid var(--line);background:rgba(0,0,0,.25)}
+.p-meta b{display:block;color:var(--text);font-size:13px;margin-top:2px}
+.p-meta span{color:var(--muted)}
+
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:10px}
+.mouse{width:22px;height:34px;border:1.5px solid var(--muted);border-radius:12px;position:relative}
+.mouse::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;background:var(--cyan);border-radius:2px;transform:translateX(-50%);animation:wheel 1.6s infinite}
+@keyframes wheel{to{transform:translate(-50%,10px);opacity:0}}
+
+/* ---------- Marquee ---------- */
+.marquee{overflow:hidden;border-block:1px solid var(--line);background:rgba(10,13,28,.6);padding:18px 0;transform:rotate(-1.5deg);margin:20px -2vw}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:marq 30s linear infinite;font-family:Orbitron;font-weight:700;font-size:clamp(18px,2.6vw,28px);white-space:nowrap}
+.marquee-track span:nth-child(odd){-webkit-text-stroke:1px var(--cyan);color:transparent}
+.marquee-track em{color:var(--pink);font-style:normal}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---------- About / stats ---------- */
+.about{display:grid;grid-template-columns:1.2fr 1fr;gap:48px}
+@media (max-width:900px){.about{grid-template-columns:1fr}}
+.about p{color:var(--muted);margin-bottom:18px;font-size:19px}
+.about p strong{color:var(--text)}
+.counters{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.counter{padding:26px 22px;background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden}
+.counter::after{content:"";position:absolute;top:0;left:0;width:30px;height:2px;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.counter b{font-family:Orbitron;font-size:clamp(34px,4vw,48px);font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.counter span{display:block;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* ---------- Services ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{position:relative;padding:30px 26px;background:var(--panel);border:1px solid var(--line);transition:transform .25s,border-color .25s;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,0 100%)}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(0,240,255,.14),transparent 45%);opacity:0;transition:opacity .3s}
+.card:hover::before{opacity:1}
+.card:hover{border-color:rgba(0,240,255,.5);transform:translateY(-6px)}
+.card .ico{width:48px;height:48px;margin-bottom:18px;color:var(--cyan)}
+.card h3{font-family:Orbitron;font-size:17px;margin-bottom:10px;letter-spacing:.03em}
+.card p{color:var(--muted);font-size:16px}
+.card .k{position:absolute;top:18px;right:30px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--pink);opacity:.7}
+
+/* ---------- Projects ---------- */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px;perspective:1200px}
+@media (max-width:400px){.projects{grid-template-columns:1fr}}
+.proj{position:relative;background:var(--panel);border:1px solid var(--line);transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .3s;will-change:transform}
+.proj:hover{box-shadow:0 30px 60px -20px rgba(255,43,214,.35),0 0 0 1px rgba(0,240,255,.4)}
+.thumb{position:relative;height:210px;overflow:hidden;background:#070915}
+.thumb canvas{width:100%;height:100%;display:block}
+.thumb .lvl{position:absolute;top:14px;left:14px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;background:rgba(0,0,0,.6);border:1px solid var(--cyan);color:var(--cyan)}
+.proj-body{padding:24px;transform:translateZ(30px)}
+.proj h3{font-family:Orbitron;font-size:19px;margin-bottom:8px}
+.proj p{color:var(--muted);font-size:16px;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;border:1px solid var(--line);color:var(--muted);background:rgba(0,0,0,.25)}
+
+/* ---------- Shipped titles ---------- */
+.titles{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px}
+.titles span{font-family:'JetBrains Mono',monospace;font-size:13px;padding:8px 14px;border:1px solid var(--line);background:rgba(10,13,28,.6);transition:all .2s}
+.titles span:hover{border-color:var(--pink);color:var(--pink);transform:translateY(-2px)}
+.subhead{font-family:Orbitron;font-size:15px;letter-spacing:.2em;color:var(--muted);margin-top:70px}
+
+/* ---------- Timeline ---------- */
+.timeline{position:relative;padding-left:40px}
+.timeline::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--cyan),var(--pink),transparent)}
+.tl-fill{position:absolute;left:11px;top:6px;width:2px;height:0;background:#fff;box-shadow:0 0 14px var(--cyan)}
+.tl{position:relative;margin-bottom:34px;padding:24px 26px;background:var(--panel);border:1px solid var(--line);transition:border-color .3s}
+.tl:hover{border-color:rgba(255,43,214,.5)}
+.tl::before{content:"";position:absolute;left:-36px;top:28px;width:14px;height:14px;background:var(--bg);border:2px solid var(--cyan);transform:rotate(45deg);box-shadow:0 0 12px var(--cyan)}
+.tl-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.tl h3{font-family:Orbitron;font-size:18px}
+.tl h3 small{display:block;font-family:Rajdhani;font-size:17px;font-weight:600;color:var(--cyan);margin-top:4px;letter-spacing:0}
+.tl time{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--lime);border:1px solid rgba(182,255,59,.3);padding:3px 10px}
+.tl p{color:var(--muted);margin-top:12px;font-size:17px}
+.tl .badge{display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);border:1px solid rgba(255,176,32,.4);padding:3px 10px}
+
+/* ---------- Inventory ---------- */
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.slot{position:relative;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:12px;
+  background:linear-gradient(160deg,rgba(20,26,54,.9),rgba(8,10,22,.9));border:1px solid var(--line);transition:transform .25s,border-color .25s,box-shadow .25s}
+.slot::after{content:attr(data-r);position:absolute;top:8px;right:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--rc,var(--cyan))}
+.slot:hover{transform:translateY(-6px) scale(1.03);border-color:var(--rc,var(--cyan));box-shadow:0 0 24px -4px var(--rc,var(--cyan)),inset 0 0 24px -10px var(--rc,var(--cyan))}
+.slot .glyph{font-family:Orbitron;font-weight:900;font-size:28px;color:var(--rc,var(--cyan));text-shadow:0 0 16px var(--rc,var(--cyan))}
+.slot b{font-family:Orbitron;font-size:12px;letter-spacing:.04em}
+.slot.legendary{--rc:var(--amber)}.slot.epic{--rc:var(--pink)}.slot.rare{--rc:var(--cyan)}.slot.common{--rc:var(--lime)}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:middle}
+
+/* ---------- Achievements ---------- */
+.achv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.achv{display:flex;gap:18px;align-items:center;padding:22px;background:var(--panel);border:1px solid var(--line)}
+.trophy{flex:none;width:58px;height:58px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle,rgba(255,176,32,.3),transparent 70%);border:1.5px solid var(--amber);color:var(--amber)}
+.achv h4{font-family:Orbitron;font-size:15px}
+.achv p{color:var(--muted);font-size:15px}
+.achv small{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--lime)}
+
+/* ---------- Contact ---------- */
+#contact{text-align:center;padding-bottom:80px}
+.go{font-family:Orbitron;font-weight:900;font-size:clamp(40px,9vw,120px);line-height:1;margin:10px 0 24px}
+.go .outline{display:block}
+#contact p{color:var(--muted);max-width:580px;margin:0 auto 36px;font-size:19px}
+.btns.center{justify-content:center}
+footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+
+/* ---------- Reveal ---------- */
+.rv{opacity:0;transform:translateY(40px);filter:blur(6px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1),filter .9s}
+.rv.in{opacity:1;transform:none;filter:none}
+.rv-l{transform:translateX(-50px)}
+.split-char{display:inline-block;opacity:0;transform:translateY(100%) rotateX(-90deg);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.in .split-char{opacity:1;transform:none}
+
+/* Toast */
+.toast{position:fixed;right:20px;bottom:20px;z-index:80;display:flex;gap:14px;align-items:center;padding:14px 18px;background:rgba(10,13,28,.95);border:1px solid var(--amber);
+  box-shadow:0 0 30px -8px var(--amber);transform:translateX(130%);transition:transform .6s cubic-bezier(.2,.8,.2,1);max-width:calc(100vw - 40px)}
+.toast.show{transform:none}
+.toast .trophy{width:40px;height:40px}
+.toast b{display:block;font-family:Orbitron;font-size:12px;color:var(--amber);letter-spacing:.1em}
+.toast span{font-size:15px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.split-char{opacity:1;transform:none;filter:none}
+}
+</style>
+</head>
+<body class="loading">
+
+<div id="loader">
+  <div class="load-box">
+    <div class="load-title">LOADING <span>LEVEL_01</span></div>
+    <div class="load-row"><span>Compiling shaders…</span><span id="pct">0%</span></div>
+    <div class="bar"><i id="loadBar"></i></div>
+    <div id="loadLog"></div>
+    <div class="press" id="press">▶ PRESS ANY KEY</div>
+  </div>
+</div>
+
+<canvas id="bg"></canvas>
+<div class="grid-floor"></div>
+<div class="scan"></div>
+<div class="vignette"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<nav id="nav">
+  <a href="#hero" class="logo">DJ<b>.</b>DEV</a>
+  <div class="nav-links">
+    <a href="#about"><span>01.</span> Player</a>
+    <a href="#work"><span>02.</span> Levels</a>
+    <a href="#career"><span>03.</span> Campaign</a>
+    <a href="#skills"><span>04.</span> Inventory</a>
+    <a href="#contact"><span>05.</span> Co-op</a>
+  </div>
+  <div class="hp">XP <div class="bar"><i id="xp"></i></div></div>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="tag rv"><i></i> Available — open to contract & contract-to-hire</div>
+      <h1 class="hero-name rv">
+        <span class="glitch" data-text="DANIYAL">DANIYAL</span><br>
+        <span class="outline">J.</span>
+      </h1>
+      <div class="role rv"><span id="typed"></span><span class="caret"></span></div>
+      <p class="hero-text rv">Game developer with 3+ years building gameplay systems, interactive 3D worlds and optimized mobile & PC experiences in <strong style="color:var(--text)">Unity</strong> and <strong style="color:var(--text)">Unreal Engine</strong> — from first prototype to polished release.</p>
+      <div class="btns rv">
+        <a href="#work" class="btn btn-primary" data-hover>▶ Start Game</a>
+        <a href="https://www.upwork.com/freelancers/~01c65dceca1470499b" target="_blank" rel="noopener" class="btn btn-ghost" data-hover>Hire on Upwork</a>
+      </div>
+    </div>
+
+    <div class="player rv" id="playerCard">
+      <div class="p-top">
+        <div class="avatar">DJ</div>
+        <div>
+          <div class="p-name">DANIYAL J.</div>
+          <div class="p-class">CLASS: Unity / Unreal Developer · LVL 3+</div>
+        </div>
+      </div>
+      <div class="stat"><div class="stat-row"><span>UNITY · C#</span><span>95</span></div><div class="bar"><i data-w="95"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>GAMEPLAY SYSTEMS</span><span>92</span></div><div class="bar"><i data-w="92"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>OPTIMIZATION</span><span>86</span></div><div class="bar"><i data-w="86"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>UNREAL · C++</span><span>78</span></div><div class="bar"><i data-w="78"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>VR / AR / XR</span><span>75</span></div><div class="bar"><i data-w="75"></i></div></div>
+      <div class="p-meta">
+        <div><span>BASE</span><b>Rawalpindi, PK</b></div>
+        <div><span>RATE</span><b>$15 / hr</b></div>
+        <div><span>LANG</span><b>English · Urdu</b></div>
+        <div><span>STATUS</span><b style="color:var(--lime)">● ID Verified</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="mouse"></div>SCROLL</div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marquee"></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-head"><span class="sec-num">01 //</span><h2 class="sec-title split">PLAYER PROFILE</h2><span class="sec-line"></span></div>
+  <div class="about">
+    <div>
+      <p class="rv">I build <strong>robust gameplay systems</strong>, interactive 3D environments and optimized experiences for mobile and PC. My focus is taking projects from prototype to <strong>polished release</strong> with smooth performance and engaging player interactions.</p>
+      <p class="rv">I've shipped titles across <strong>racing, FPS, RPG, simulation and multiplayer</strong> — and led a dev team as Team Lead, reviewing code and unblocking teammates.</p>
+      <p class="rv">Currently developing <strong>advanced interaction systems and tool behaviors</strong> for a simulation project — complex object manipulation and real-time feedback loops.</p>
+    </div>
+    <div class="counters">
+      <div class="counter rv"><b data-count="3">0</b><b>+</b><span>Years experience</span></div>
+      <div class="counter rv"><b data-count="30">0</b><b>+</b><span>Games & sims built</span></div>
+      <div class="counter rv"><b data-count="6">0</b><span>Studios</span></div>
+      <div class="counter rv"><b data-count="2">0</b><span>Engines mastered</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="sec-head"><span class="sec-num">01.5 //</span><h2 class="sec-title split">ABILITIES</h2><span class="sec-line"></span></div>
+  <div class="cards">
+    <div class="card rv"><span class="k">[Q]</span>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="14" width="36" height="22" rx="11"/><path d="M15 21v8M11 25h8"/><circle cx="31" cy="23" r="2"/><circle cx="35" cy="27" r="2"/></svg>
+      <h3>Gameplay Systems</h3><p>Controllers, UI flows, inventory, save systems, combat, vehicles and physics-driven interactions.</p></div>
+    <div class="card rv"><span class="k">[W]</span>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 38 18 24l8 8 16-20"/><path d="M34 12h8v8"/></svg>
+      <h3>Optimization</h3><p>Profiling, memory management and frame-rate improvements to keep builds smooth on low-end devices.</p></div>
+    <div class="card rv"><span class="k">[E]</span>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h36v14a4 4 0 0 1-4 4h-8l-6-6-6 6h-8a4 4 0 0 1-4-4z"/><circle cx="15" cy="26" r="3"/><circle cx="33" cy="26" r="3"/></svg>
+      <h3>VR / AR / XR</h3><p>Immersive simulations and interactive applications with intuitive object manipulation.</p></div>
+    <div class="card rv"><span class="k">[R]</span>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="14" y="4" width="20" height="40" rx="4"/><path d="M21 38h6"/><path d="M20 14h8v8h-8z"/></svg>
+      <h3>Mobile & SDKs</h3><p>Android integration, Firebase, AdMob and third-party SDKs — production ready.</p></div>
+    <div class="card rv"><span class="k">[T]</span>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M28 8a10 10 0 0 0-12 13L6 31l5 5 10-10a10 10 0 0 0 13-12l-6 6-5-1-1-5z"/></svg>
+      <h3>Tools & Pipelines</h3><p>Custom editor tools for designers, Git/GitHub workflows and CI/CD build pipelines.</p></div>
+    <div class="card rv"><span class="k">[Y]</span>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h12M24 10v6"/><rect x="12" y="16" width="24" height="24" rx="8"/><path d="M12 26H6M42 26h-6M12 34l-5 4M36 34l5 4"/></svg>
+      <h3>Debug & Maintenance</h3><p>Fixing legacy code, upgrading engine versions and stabilizing builds for release.</p></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="work">
+  <div class="sec-head"><span class="sec-num">02 //</span><h2 class="sec-title split">SELECT LEVEL</h2><span class="sec-line"></span></div>
+  <div class="projects">
+    <article class="proj rv" data-tilt>
+      <div class="thumb"><canvas data-scene="bubbles"></canvas><span class="lvl">LVL 01</span></div>
+      <div class="proj-body">
+        <h3>3D Cleaning Game</h3>
+        <p>Unity gameplay development — satisfying tool-based cleaning mechanics, surface interaction and real-time visual feedback.</p>
+        <div class="chips"><span class="chip">Unity</span><span class="chip">C#</span><span class="chip">Interaction</span><span class="chip">Mobile</span></div>
+      </div>
+    </article>
+    <article class="proj rv" data-tilt>
+      <div class="thumb"><canvas data-scene="waves"></canvas><span class="lvl">LVL 02</span></div>
+      <div class="proj-body">
+        <h3>PM Ship — Prime Minister Simulator</h3>
+        <p>Political management sim — balance popularity, economy, policy and cabinet decisions across the country map.</p>
+        <div class="chips"><span class="chip">Unity</span><span class="chip">Strategy</span><span class="chip">Simulation</span></div>
+      </div>
+    </article>
+    <article class="proj rv" data-tilt>
+      <div class="thumb"><canvas data-scene="road"></canvas><span class="lvl">LVL 03</span></div>
+      <div class="proj-body">
+        <h3>3D Mobile Simulation Games</h3>
+        <p>A series of vehicle and driving simulators — bus, truck, parking and stunt games built and shipped for Android.</p>
+        <div class="chips"><span class="chip">Unity</span><span class="chip">Vehicles</span><span class="chip">AdMob</span><span class="chip">Firebase</span></div>
+      </div>
+    </article>
+  </div>
+
+  <h3 class="subhead rv">// SHIPPED & CONTRIBUTED TITLES</h3>
+  <div class="titles rv" id="titles"></div>
+</section>
+
+<!-- CAREER -->
+<section id="career">
+  <div class="sec-head"><span class="sec-num">03 //</span><h2 class="sec-title split">CAMPAIGN MODE</h2><span class="sec-line"></span></div>
+  <div class="timeline" id="timeline">
+    <div class="tl-fill" id="tlFill"></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>Algoryte<small>Unity & Unreal Developer</small></h3><time>Sep 2024 — Aug 2026</time></div>
+      <p>Multiple Unity and Unreal projects — 3D games, VR/AR experiences, simulations and interactive apps across racing, FPS, RPG and multiplayer. Gameplay, controls, UI, physics, optimization, and SDK integration (Firebase, AdMob).</p></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>Pyra Games (Idrak AI)<small>Unity Developer</small></h3><time>Oct 2023 — Apr 2024</time></div>
+      <p>Gameplay, UI and mechanics for shipped mobile titles: Beaky Chicky, Ramp Ball Balance 3D, Bus Simulator, Monster Truck Ball Game and Cruise Ship Simulator 3D.</p></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>X-One Games<small>Unity Developer</small></h3><time>Mar 2023 — Apr 2025</time></div>
+      <p>3D games and simulations including Urban Pursuit – Cop vs. Robber and the BioFire series. FPS mechanics, levels, vehicles and combat.</p></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>Gamican Pvt. Limited<small>Unity Developer → Team Lead</small></h3><time>Oct 2022 — Dec 2023</time></div>
+      <p>Promoted to Team Lead after 6 months. Led development, reviewed code and supported the team on Army Commando Shooting, Car Crash Simulator, Bike Stunt Trail 3D, Dino Hunter and more.</p>
+      <span class="badge">★ PROMOTION UNLOCKED</span></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>The Game Diversion Studio<small>Unity 3D Developer</small></h3><time>Mar 2022 — Sep 2022</time></div>
+      <p>Simulation and gameplay projects: Weed Farm and Shop, Surgical Simulator, Construction Simulator and Long Road Drive Simulation.</p></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>CANZ Studio<small>Unity Developer</small></h3><time>Sep 2021 — Apr 2022</time></div>
+      <p>Built and updated mobile games including Car Parking Simulator and Cargo Truck Simulator — features, mechanics and bug fixes.</p></div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sec-head"><span class="sec-num">04 //</span><h2 class="sec-title split">INVENTORY</h2><span class="sec-line"></span></div>
+  <div class="inv" id="inv"></div>
+  <div class="legend">
+    <span><i style="background:var(--amber)"></i>Legendary</span>
+    <span><i style="background:var(--pink)"></i>Epic</span>
+    <span><i style="background:var(--cyan)"></i>Rare</span>
+    <span><i style="background:var(--lime)"></i>Common</span>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="sec-head"><span class="sec-num">04.5 //</span><h2 class="sec-title split">ACHIEVEMENTS</h2><span class="sec-line"></span></div>
+  <div class="achv-grid">
+    <div class="achv rv"><div class="trophy">🏆</div><div><h4>Unity Junior Programmer</h4><p>Unity Technologies</p><small>UNLOCKED · DEC 2021</small></div></div>
+    <div class="achv rv"><div class="trophy">🎓</div><div><h4>BS Computer Science</h4><p>University of Arid Agriculture, Rawalpindi</p><small>UNLOCKED · 2015 – 2019</small></div></div>
+    <div class="achv rv"><div class="trophy">⚔️</div><div><h4>Team Lead</h4><p>Promoted within 6 months at Gamican</p><small>UNLOCKED · 2023</small></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-head" style="justify-content:center"><span class="sec-num">05 //</span><h2 class="sec-title split">CO-OP MODE</h2></div>
+  <div class="go rv"><span class="glitch" data-text="PLAYER 2">PLAYER 2</span><span class="outline">READY?</span></div>
+  <p class="rv">Need a full game build, a specific mechanic, or performance tuning? Let's build it together.</p>
+  <div class="btns center rv">
+    <a href="https://www.upwork.com/freelancers/~01c65dceca1470499b" target="_blank" rel="noopener" class="btn btn-primary" data-hover>▶ Invite on Upwork</a>
+    <a href="#hero" class="btn btn-ghost" data-hover>↺ Restart</a>
+  </div>
+</section>
+</main>
+
+<footer><span>© <span id="yr"></span> Daniyal J. — Unity & Unreal Developer</span><span>Built with ❤ & 60 FPS</span></footer>
+
+<div class="toast" id="toast"><div class="trophy">🏆</div><div><b>ACHIEVEMENT UNLOCKED</b><span id="toastText">Explorer</span></div></div>
+
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+$('#yr').textContent = new Date().getFullYear();
+
+/* ---------- Loader ---------- */
+const logs = ['> init engine… OK','> loading meshes… OK','> baking lightmaps… OK','> spawning player… OK','> ready.'];
+let p = 0, li = 0;
+const tick = setInterval(() => {
+  p = Math.min(100, p + Math.random() * 14 + 4);
+  $('#loadBar').style.width = p + '%';
+  $('#pct').textContent = Math.floor(p) + '%';
+  if (p > (li + 1) * 19 && li < logs.length) { $('#loadLog').innerHTML += logs[li++] + '<br>'; $('#loadLog').scrollTop = 999; }
+  if (p >= 100) { clearInterval(tick); $('#press').style.opacity = 1; setTimeout(start, 650); }
+}, reduce ? 20 : 110);
+let started = false;
+function start(){
+  if (started) return; started = true;
+  $('#loader').classList.add('done');
+  document.body.classList.remove('loading');
+  setTimeout(() => { $$('#hero .rv').forEach((el,i) => setTimeout(() => el.classList.add('in'), i*120)); }, 300);
+  setTimeout(() => $$('.player .bar i').forEach(b => b.style.width = b.dataset.w + '%'), 1100);
+  setTimeout(typeLoop, 900);
+}
+addEventListener('keydown', () => p >= 100 && start());
+$('#loader').addEventListener('click', () => p >= 100 && start());
+
+/* ---------- Typed roles ---------- */
+const roles = ['Unity Developer · C#','Unreal Engine Developer · C++','Gameplay Systems Engineer','VR / AR / XR Builder','Performance Optimizer'];
+let ri = 0, ci = 0, del = false;
+function typeLoop(){
+  const w = roles[ri];
+  $('#typed').textContent = w.slice(0, ci);
+  if (!del && ci < w.length) ci++;
+  else if (!del) { del = true; return setTimeout(typeLoop, 1600); }
+  else if (ci > 0) ci--;
+  else { del = false; ri = (ri + 1) % roles.length; }
+  setTimeout(typeLoop, del ? 35 : 70);
+}
+
+/* ---------- Marquee ---------- */
+const mq = ['UNITY','<em>✦</em>','UNREAL ENGINE','<em>✦</em>','C#','<em>✦</em>','C++','<em>✦</em>','VR / AR','<em>✦</em>','GAMEPLAY','<em>✦</em>','OPTIMIZATION','<em>✦</em>','MOBILE','<em>✦</em>'];
+$('#marquee').innerHTML = [...mq, ...mq].map(t => `<span>${t}</span>`).join('');
+
+/* ---------- Titles ---------- */
+const titles = ['Beaky Chicky','Ramp Ball Balance 3D','Bus Simulator','Monster Truck Ball Game','Cruise Ship Simulator 3D','Urban Pursuit – Cop vs. Robber','BioFire – Uprising Warzone','BioFire – Blood Fight','Army Commando Shooting','Car Crash Simulator','Bike Stunt Trail 3D','Dino Hunter','City Bus Simulator','Prado Car Parking Simulator','Weed Farm and Shop','Surgical Simulator','Construction Simulator','Long Road Drive Simulation','Car Parking Simulator','Cargo Truck Simulator'];
+$('#titles').innerHTML = titles.map(t => `<span data-hover>🎮 ${t}</span>`).join('');
+
+/* ---------- Inventory ---------- */
+const inv = [['Unity','U','legendary','LEG'],['C#','C#','legendary','LEG'],['Unreal Engine','UE','epic','EPC'],['C++','++','epic','EPC'],['Game Development','GD','legendary','LEG'],['Game Design','◈','epic','EPC'],['Game Prototype','⚡','rare','RAR'],['Bug Fixing','⚙','rare','RAR'],['VR / AR / XR','VR','epic','EPC'],['Physics','Φ','rare','RAR'],['Firebase · AdMob','🔥','rare','RAR'],['Git / CI-CD','⎇','common','COM'],['Arcade Games','👾','common','COM'],['Board Games','♟','common','COM'],['Solution Oriented','✔','rare','RAR']];
+$('#inv').innerHTML = inv.map(([n,g,r,t]) => `<div class="slot rv ${r}" data-r="${t}" data-hover><span class="glyph">${g}</span><b>${n}</b></div>`).join('');
+
+/* ---------- Split headings ---------- */
+$$('.split').forEach(h => {
+  h.innerHTML = [...h.textContent].map((c,i) => `<span class="split-char" style="transition-delay:${i*30}ms">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+  h.classList.add('rv'); h.style.opacity = 1; h.style.filter = 'none'; h.style.transform = 'none';
+});
+
+/* ---------- Reveal on scroll ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const el = e.target;
+  if (el.closest('#hero') && !started) return;
+  const sib = [...el.parentElement.children].filter(c => c.classList.contains('rv'));
+  el.style.transitionDelay = Math.min(sib.indexOf(el), 8) * 70 + 'ms';
+  el.classList.add('in');
+  el.querySelectorAll('[data-count]').forEach(countUp);
+  if (el.matches('[data-count]')) countUp(el);
+  io.unobserve(el);
+}), { threshold: .15 });
+$$('.rv').forEach(el => { if (!el.closest('#hero')) io.observe(el); });
+
+function countUp(el){
+  const end = +el.dataset.count, t0 = performance.now();
+  const step = t => { const k = Math.min(1,(t-t0)/1400); el.textContent = Math.round(end*(1-Math.pow(1-k,3))); if (k<1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+
+/* ---------- Nav, XP bar, timeline fill, achievements ---------- */
+const secs = ['about','work','career','skills','contact'];
+const unlocked = new Set();
+const toastNames = {work:'Level Select — Browsed the portfolio',career:'Lore Master — Read the campaign',skills:'Looter — Opened the inventory',contact:'Endgame — Reached the final level'};
+let toastT;
+function toast(msg){ $('#toastText').textContent = msg; $('#toast').classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => $('#toast').classList.remove('show'), 2800); }
+function onScroll(){
+  const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
+  $('#nav').classList.toggle('scrolled', y > 40);
+  $('#xp').style.width = (y / h * 100) + '%';
+  let cur = '';
+  secs.forEach(id => { const s = document.getElementById(id); if (s.getBoundingClientRect().top < innerHeight * .45) cur = id; });
+  $$('.nav-links a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+  if (toastNames[cur] && !unlocked.has(cur)) { unlocked.add(cur); toast(toastNames[cur]); }
+  const tl = $('#timeline').getBoundingClientRect();
+  const k = Math.max(0, Math.min(1, (innerHeight * .6 - tl.top) / tl.height));
+  $('#tlFill').style.height = (k * (tl.height - 12)) + 'px';
+}
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+/* ---------- Cursor ---------- */
+const cur = $('#cursor'), dot = $('#cursorDot');
+let mx = innerWidth/2, my = innerHeight/2, cx = mx, cy = my;
+addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`; });
+(function loop(){ cx += (mx-cx)*.18; cy += (my-cy)*.18; cur.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(loop); })();
+document.addEventListener('mouseover', e => cur.classList.toggle('hover', !!e.target.closest('a,button,[data-hover],.card,.proj')));
+
+/* ---------- Card spotlight + tilt ---------- */
+$$('.card').forEach(c => c.addEventListener('mousemove', e => {
+  const r = c.getBoundingClientRect(); c.style.setProperty('--mx', e.clientX-r.left+'px'); c.style.setProperty('--my', e.clientY-r.top+'px');
+}));
+function tilt(el, amt){
+  if (reduce) return;
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5;
+    el.style.transform = `perspective(900px) rotateY(${x*amt}deg) rotateX(${-y*amt}deg) translateY(-6px)`;
+  });
+  el.addEventListener('mouseleave', () => el.style.transform = '');
+}
+$$('[data-tilt]').forEach(el => tilt(el, 14));
+tilt($('#playerCard'), 10);
+
+/* ---------- Magnetic buttons ---------- */
+$$('.btn').forEach(b => {
+  b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX-r.left-r.width/2)*.25}px,${(e.clientY-r.top-r.height/2)*.35}px)`; });
+  b.addEventListener('mouseleave', () => b.style.transform = '');
+});
+
+/* ---------- Background: 3D starfield + wireframe shapes ---------- */
+const cv = $('#bg'), ctx = cv.getContext('2d');
+let W, H, DPR = Math.min(devicePixelRatio, 2);
+function size(){ W = cv.width = innerWidth*DPR; H = cv.height = innerHeight*DPR; cv.style.width = innerWidth+'px'; cv.style.height = innerHeight+'px'; }
+size(); addEventListener('resize', size);
+const stars = Array.from({length: innerWidth < 700 ? 140 : 320}, () => ({x:(Math.random()-.5)*2000, y:(Math.random()-.5)*2000, z:Math.random()*1000}));
+const cube = [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+const cubeE = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+const t = (1+Math.sqrt(5))/2;
+const ico = [[-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],[0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],[t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]];
+const icoE = []; ico.forEach((a,i) => ico.forEach((b,j) => { if (j>i && Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]) < 2.1) icoE.push([i,j]); }));
+function drawShape(v, e, ox, oy, s, rx, ry, col){
+  const pts = v.map(([x,y,z]) => {
+    let X = x*Math.cos(ry)-z*Math.sin(ry), Z = x*Math.sin(ry)+z*Math.cos(ry);
+    let Y = y*Math.cos(rx)-Z*Math.sin(rx); Z = y*Math.sin(rx)+Z*Math.cos(rx);
+    const k = 4/(4+Z*.4); return [ox+X*s*k, oy+Y*s*k];
+  });
+  ctx.strokeStyle = col; ctx.lineWidth = 1.2*DPR; ctx.shadowColor = col; ctx.shadowBlur = 12*DPR;
+  ctx.beginPath(); e.forEach(([a,b]) => { ctx.moveTo(...pts[a]); ctx.lineTo(...pts[b]); }); ctx.stroke(); ctx.shadowBlur = 0;
+}
+let time = 0, pmx = 0, pmy = 0;
+function frame(){
+  time += .006;
+  pmx += ((mx/innerWidth-.5) - pmx)*.05; pmy += ((my/innerHeight-.5) - pmy)*.05;
+  ctx.fillStyle = 'rgba(5,6,13,.35)'; ctx.fillRect(0,0,W,H);
+  const sp = 2 + scrollVel;
+  stars.forEach(s => {
+    s.z -= sp; if (s.z < 1) { s.z = 1000; s.x = (Math.random()-.5)*2000; s.y = (Math.random()-.5)*2000; }
+    const k = 300/s.z, x = W/2 + (s.x - pmx*200)*k*DPR, y = H/2 + (s.y - pmy*200)*k*DPR;
+    const a = 1 - s.z/1000;
+    ctx.fillStyle = s.x > 0 ? `rgba(0,240,255,${a})` : `rgba(255,${120+a*100|0},240,${a})`;
+    ctx.fillRect(x, y, 1.6*DPR*a+.4, 1.6*DPR*a+.4);
+  });
+  const sc = Math.min(W,H);
+  if (innerWidth > 700) drawShape(cube, cubeE, W*.88 - pmx*40*DPR, H*.22 - pmy*40*DPR, sc*.05, time*1.3, time, 'rgba(0,240,255,.5)');
+  drawShape(ico, icoE, W*.1 - pmx*60*DPR, H*.78 - pmy*60*DPR, sc*.045, time*.8, time*1.1, 'rgba(255,43,214,.45)');
+  scrollVel *= .92;
+  requestAnimationFrame(frame);
+}
+let scrollVel = 0, lastY = scrollY;
+addEventListener('scroll', () => { scrollVel = Math.min(40, Math.abs(scrollY-lastY)*.6); lastY = scrollY; }, {passive:true});
+if (!reduce) frame(); else { ctx.fillStyle='#05060d'; ctx.fillRect(0,0,W,H); }
+
+/* ---------- Project thumbnails: mini procedural scenes ---------- */
+const scenes = $$('[data-scene]').map(c => ({ c, x: c.getContext('2d'), type: c.dataset.scene, vis: false }));
+const tio = new IntersectionObserver(es => es.forEach(e => { scenes.find(s => s.c === e.target).vis = e.isIntersecting; }));
+scenes.forEach(s => tio.observe(s.c));
+const bubbles = Array.from({length:26}, () => ({x:Math.random(), y:Math.random(), r:Math.random()*14+4, v:Math.random()*.004+.002}));
+function thumbs(ts){
+  scenes.forEach(({c,x,type,vis}) => {
+    if (!vis) return;
+    const w = c.width = c.clientWidth*DPR, h = c.height = c.clientHeight*DPR, T = ts/1000;
+    if (type === 'bubbles'){
+      const g = x.createLinearGradient(0,0,w,h); g.addColorStop(0,'#081a2a'); g.addColorStop(1,'#1a0a2a'); x.fillStyle = g; x.fillRect(0,0,w,h);
+      x.strokeStyle='rgba(0,240,255,.15)'; for (let i=0;i<w;i+=30*DPR){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,h); x.stroke(); }
+      const sx = w*(.5+.35*Math.sin(T*1.2)), sy = h*(.55+.2*Math.cos(T*1.7));
+      x.fillStyle='rgba(182,255,59,.12)'; x.beginPath(); x.ellipse(sx,sy,60*DPR,26*DPR,0,0,7); x.fill();
+      bubbles.forEach(b => { b.y -= b.v; if (b.y < -.1) { b.y = 1.1; b.x = Math.random(); }
+        x.strokeStyle='rgba(255,255,255,.55)'; x.lineWidth=1.2*DPR; x.beginPath(); x.arc(b.x*w + Math.sin(T*2+b.r)*6, b.y*h, b.r*DPR, 0, 7); x.stroke();
+        x.fillStyle='rgba(0,240,255,.12)'; x.fill(); });
+    } else if (type === 'waves'){
+      const g = x.createLinearGradient(0,0,0,h); g.addColorStop(0,'#1a0a2a'); g.addColorStop(.5,'#3a0f3a'); g.addColorStop(1,'#04121f'); x.fillStyle = g; x.fillRect(0,0,w,h);
+      x.fillStyle='#ffb020'; x.shadowColor='#ff2bd6'; x.shadowBlur=30*DPR; x.beginPath(); x.arc(w*.7,h*.45,28*DPR,0,7); x.fill(); x.shadowBlur=0;
+      for (let L=0; L<5; L++){ x.strokeStyle=`rgba(0,240,255,${.25+L*.12})`; x.lineWidth=1.3*DPR; x.beginPath();
+        for (let i=0;i<=w;i+=6){ const y = h*(.55+L*.09) + Math.sin(i/(40*DPR)+T*(1.2+L*.3)+L)*(5+L*2)*DPR; i?x.lineTo(i,y):x.moveTo(i,y); } x.stroke(); }
+      const bx = w*.35, by = h*.58 + Math.sin(T*1.5)*5*DPR, rk = Math.sin(T*1.5)*.06;
+      x.save(); x.translate(bx,by); x.rotate(rk); x.fillStyle='#e6e9ff';
+      x.beginPath(); x.moveTo(-60*DPR,0); x.lineTo(60*DPR,0); x.lineTo(45*DPR,16*DPR); x.lineTo(-50*DPR,16*DPR); x.fill();
+      x.fillRect(-30*DPR,-20*DPR,40*DPR,20*DPR); x.fillStyle='#ff2bd6'; x.fillRect(-6*DPR,-36*DPR,10*DPR,16*DPR); x.restore();
+    } else {
+      x.fillStyle='#07091a'; x.fillRect(0,0,w,h);
+      const hz = h*.42; const g = x.createLinearGradient(0,0,0,hz); g.addColorStop(0,'#0a0d2a'); g.addColorStop(1,'#3a0f3a'); x.fillStyle=g; x.fillRect(0,0,w,hz);
+      x.fillStyle='rgba(0,0,0,.6)'; for (let i=0;i<w;i+=26*DPR){ const bh = (Math.sin(i*.37)*.5+.5)*50*DPR+15*DPR; x.fillRect(i,hz-bh,22*DPR,bh); }
+      x.strokeStyle='#ff2bd6'; x.lineWidth=1.5*DPR; x.shadowColor='#ff2bd6'; x.shadowBlur=10*DPR;
+      x.beginPath(); x.moveTo(w*.5,hz); x.lineTo(w*.05,h); x.moveTo(w*.5,hz); x.lineTo(w*.95,h); x.stroke();
+      x.strokeStyle='#00f0ff'; x.shadowColor='#00f0ff';
+      for (let i=0;i<10;i++){ const k = ((i/10 + T*.8) % 1); const y = hz + Math.pow(k,2)*(h-hz); const half = (y-hz)/(h-hz)*w*.45;
+        x.globalAlpha = k; x.beginPath(); x.moveTo(w*.5-half,y); x.lineTo(w*.5+half,y); x.stroke(); }
+      x.globalAlpha=1; x.shadowBlur=0;
+      const cxp = w*.5 + Math.sin(T*1.3)*w*.1, cyp = h*.82;
+      x.fillStyle='#b6ff3b'; x.shadowColor='#b6ff3b'; x.shadowBlur=16*DPR; x.fillRect(cxp-22*DPR,cyp-10*DPR,44*DPR,20*DPR); x.shadowBlur=0;
+      x.fillStyle='#ff2bd6'; x.fillRect(cxp-20*DPR,cyp+6*DPR,10*DPR,4*DPR); x.fillRect(cxp+10*DPR,cyp+6*DPR,10*DPR,4*DPR);
+    }
+  });
+  requestAnimationFrame(thumbs);
+}
+requestAnimationFrame(thumbs);
+
+/* ---------- Konami code easter egg ---------- */
+const kon = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']; let ki = 0;
+addEventListener('keydown', e => { ki = e.key === kon[ki] ? ki+1 : (e.key === kon[0] ? 1 : 0);
+  if (ki === kon.length){ ki = 0; toast('Cheat code activated — +30 lives'); document.documentElement.style.setProperty('--cyan','#b6ff3b'); } });
+})();
+</script>
+</body>
+</html>
