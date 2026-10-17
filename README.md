@@ -149,7 +149,11 @@ At the top of `index.html`, inside `<style>`, the `:root { … }` block holds th
 - **Fonts:** the `<link href="https://fonts.googleapis.com/…">` line at the top loads *Sora* (headings) and *Manrope* (body). Swap names there and in `font-family` rules.
 - **Auto-rotation speed** on the home screen: search `const DUR = 9000` (milliseconds).
 - **Boot/intro animation length:** search `setTimeout(finishBoot` (2600 = 2.6 s).
-- **3D background:** search `WebGL background`. `NX`/`NZ` = number of particles, `size:.065` = particle size. It uses the free **three.js** library loaded from cdnjs; if that ever fails, the site still works with the colour glow only.
+- **3D background:** search `WebGL background`. It's a "game-dev workspace": a blueprint grid, floating code windows, a transform gizmo and a selected object.
+  - **Code shown in the windows:** edit the `const snippets = [` list (each window is a list of lines; lines starting with `//` are green comments).
+  - **Window positions:** `const spots = [` — `[x, y, z]` per window; more negative `z` = further away.
+  - **Window brightness:** `opacity:.62` on the line after `spots`.
+  - It uses the free **three.js** library loaded from cdnjs; if that ever fails, the site still works with the colour glow only.
 - **Logo:** the hexagon "D" is an inline SVG — search `class="brand-mark"` (top bar) and `class="mark"` (intro screen).
 
 ---

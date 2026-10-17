@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Daniyal J. — Game Developer</title>
-<meta name="description" content="Unity & Unreal game developer — 3D games, gameplay systems, VR/AR and optimization.">
+<title>Muhammad Daniyal — Game Developer</title>
+<meta name="description" content="Unity & Unreal game developer — mobile games, simulations and XR (Quest 3). 4+ years shipping titles from concept to release.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -166,7 +166,6 @@ section{position:relative;padding:120px clamp(16px,6vw,96px);max-width:1280px;ma
 .proj{position:relative;background:var(--panel);border:1px solid var(--line);transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .3s;will-change:transform}
 .proj:hover{box-shadow:0 30px 60px -20px rgba(255,43,214,.35),0 0 0 1px rgba(0,240,255,.4)}
 .thumb{position:relative;height:210px;overflow:hidden;background:#070915}
-.thumb canvas{width:100%;height:100%;display:block}
 .thumb .lvl{position:absolute;top:14px;left:14px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;background:rgba(0,0,0,.6);border:1px solid var(--cyan);color:var(--cyan)}
 .proj-body{padding:24px;transform:translateZ(30px)}
 .proj h3{font-family:Orbitron;font-size:19px;margin-bottom:8px}
@@ -237,6 +236,35 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
 .toast b{display:block;font-family:Orbitron;font-size:12px;color:var(--amber);letter-spacing:.1em}
 .toast span{font-size:15px}
 
+.hero-name .pre{display:block;font-size:.34em;-webkit-text-stroke:1px var(--text);color:transparent;letter-spacing:.12em;margin-bottom:.12em}
+.nav-cv{font-family:'JetBrains Mono',monospace;font-size:12px;border:1px solid var(--cyan);color:var(--cyan);padding:6px 12px;transition:background .2s}
+.nav-cv:hover{background:rgba(0,240,255,.12)}
+.btn-wa{background:#25d366;color:#05060d}
+.thumb img,.thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .4s,transform .8s}
+.thumb video{opacity:0}
+.thumb video.contain{object-fit:contain;background:#05060d}
+.proj:hover .thumb video.ready{opacity:1}
+.proj:hover .thumb img{transform:scale(1.06)}
+.thumb::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(5,6,13,.85),transparent 50%),repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+.thumb .lvl,.thumb .play{z-index:2}
+.thumb .play{position:absolute;right:14px;bottom:14px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:5px 10px;background:var(--pink);color:#05060d;opacity:0;transform:translateY(6px);transition:all .3s}
+.proj:hover .thumb .play{opacity:1;transform:none}
+.proj{cursor:pointer}
+.proj .studio{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);margin-bottom:10px}
+.proj p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+footer a:hover{color:var(--cyan)}
+.nmodal{position:fixed;inset:0;z-index:94;display:grid;place-items:center;padding:20px;background:rgba(5,6,13,.92);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.nmodal.open{opacity:1;visibility:visible}
+.nm-box{width:min(1080px,100%);border:1px solid var(--cyan);background:var(--bg2);box-shadow:0 0 60px -10px var(--cyan);clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);transform:scale(.95);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.nmodal.open .nm-box{transform:none}
+.nm-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.nm-head span{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--pink)}
+.nm-head h3{font-family:Orbitron;font-size:15px;flex:1;min-width:160px}
+.nm-head button,.nm-head a{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);border:1px solid var(--line);padding:6px 10px;background:none;cursor:pointer}
+.nm-head button:hover,.nm-head a:hover{color:var(--text);border-color:var(--cyan)}
+.nm-media{aspect-ratio:16/9;max-height:72vh;width:100%;background:#000}
+.nm-media video,.nm-media iframe{width:100%;height:100%;border:0;display:block;background:#000}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv,.split-char{opacity:1;transform:none;filter:none}
@@ -263,7 +291,7 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
 <div class="cursor-dot" id="cursorDot"></div>
 
 <nav id="nav">
-  <a href="#hero" class="logo">DJ<b>.</b>DEV</a>
+  <a href="#hero" class="logo">MD<b>.</b>DEV</a>
   <div class="nav-links">
     <a href="#about"><span>01.</span> Player</a>
     <a href="#work"><span>02.</span> Levels</a>
@@ -271,7 +299,10 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
     <a href="#skills"><span>04.</span> Inventory</a>
     <a href="#contact"><span>05.</span> Co-op</a>
   </div>
-  <div class="hp">XP <div class="bar"><i id="xp"></i></div></div>
+  <div style="display:flex;align-items:center;gap:18px">
+    <a class="nav-cv" href="Daniyal_Resume.pdf" download="Muhammad-Daniyal-CV.pdf" data-hover>⬇ CV</a>
+    <div class="hp">XP <div class="bar"><i id="xp"></i></div></div>
+  </div>
 </nav>
 
 <main>
@@ -279,37 +310,37 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
 <section id="hero">
   <div class="hero-inner">
     <div>
-      <div class="tag rv"><i></i> Available — open to contract & contract-to-hire</div>
+      <div class="tag rv"><i></i> Available — freelance, contract & full-time</div>
       <h1 class="hero-name rv">
-        <span class="glitch" data-text="DANIYAL">DANIYAL</span><br>
-        <span class="outline">J.</span>
+        <span class="pre">MUHAMMAD</span>
+        <span class="glitch" data-text="DANIYAL">DANIYAL</span>
       </h1>
       <div class="role rv"><span id="typed"></span><span class="caret"></span></div>
-      <p class="hero-text rv">Game developer with 3+ years building gameplay systems, interactive 3D worlds and optimized mobile & PC experiences in <strong style="color:var(--text)">Unity</strong> and <strong style="color:var(--text)">Unreal Engine</strong> — from first prototype to polished release.</p>
+      <p class="hero-text rv">Unity &amp; Unreal game developer with <strong style="color:var(--text)">4+ years</strong> across mobile games, simulations and <strong style="color:var(--text)">XR on Meta Quest 3</strong> — shipping titles from concept to release, solo or leading a team.</p>
       <div class="btns rv">
         <a href="#work" class="btn btn-primary" data-hover>▶ Start Game</a>
-        <a href="https://www.upwork.com/freelancers/~01c65dceca1470499b" target="_blank" rel="noopener" class="btn btn-ghost" data-hover>Hire on Upwork</a>
+        <a href="Daniyal_Resume.pdf" download="Muhammad-Daniyal-CV.pdf" class="btn btn-ghost" data-hover>⬇ Download CV</a>
       </div>
     </div>
 
     <div class="player rv" id="playerCard">
       <div class="p-top">
-        <div class="avatar">DJ</div>
+        <div class="avatar">MD</div>
         <div>
-          <div class="p-name">DANIYAL J.</div>
-          <div class="p-class">CLASS: Unity / Unreal Developer · LVL 3+</div>
+          <div class="p-name">MUHAMMAD DANIYAL</div>
+          <div class="p-class">CLASS: Unity / Unreal Developer · LVL 4+</div>
         </div>
       </div>
       <div class="stat"><div class="stat-row"><span>UNITY · C#</span><span>95</span></div><div class="bar"><i data-w="95"></i></div></div>
-      <div class="stat"><div class="stat-row"><span>GAMEPLAY SYSTEMS</span><span>92</span></div><div class="bar"><i data-w="92"></i></div></div>
-      <div class="stat"><div class="stat-row"><span>OPTIMIZATION</span><span>86</span></div><div class="bar"><i data-w="86"></i></div></div>
-      <div class="stat"><div class="stat-row"><span>UNREAL · C++</span><span>78</span></div><div class="bar"><i data-w="78"></i></div></div>
-      <div class="stat"><div class="stat-row"><span>VR / AR / XR</span><span>75</span></div><div class="bar"><i data-w="75"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>GAMEPLAY &amp; UI</span><span>92</span></div><div class="bar"><i data-w="92"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>UNREAL ENGINE</span><span>84</span></div><div class="bar"><i data-w="84"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>XR · QUEST 3</span><span>80</span></div><div class="bar"><i data-w="80"></i></div></div>
+      <div class="stat"><div class="stat-row"><span>CINEMATICS · FX</span><span>78</span></div><div class="bar"><i data-w="78"></i></div></div>
       <div class="p-meta">
-        <div><span>BASE</span><b>Rawalpindi, PK</b></div>
-        <div><span>RATE</span><b>$15 / hr</b></div>
+        <div><span>BASE</span><b>Islamabad, PK</b></div>
+        <div><span>EXP</span><b>4+ years · 6 studios</b></div>
         <div><span>LANG</span><b>English · Urdu</b></div>
-        <div><span>STATUS</span><b style="color:var(--lime)">● ID Verified</b></div>
+        <div><span>STATUS</span><b style="color:var(--lime)">● Available</b></div>
       </div>
     </div>
   </div>
@@ -325,15 +356,15 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
   <div class="sec-head"><span class="sec-num">01 //</span><h2 class="sec-title split">PLAYER PROFILE</h2><span class="sec-line"></span></div>
   <div class="about">
     <div>
-      <p class="rv">I build <strong>robust gameplay systems</strong>, interactive 3D environments and optimized experiences for mobile and PC. My focus is taking projects from prototype to <strong>polished release</strong> with smooth performance and engaging player interactions.</p>
-      <p class="rv">I've shipped titles across <strong>racing, FPS, RPG, simulation and multiplayer</strong> — and led a dev team as Team Lead, reviewing code and unblocking teammates.</p>
-      <p class="rv">Currently developing <strong>advanced interaction systems and tool behaviors</strong> for a simulation project — complex object manipulation and real-time feedback loops.</p>
+      <p class="rv">I'm a game developer with <strong>4+ years</strong> across mobile, simulation and <strong>XR/VR/AR</strong> projects. My strengths are <strong>C# gameplay programming</strong>, UI integration, <strong>spline-based cinematics</strong> and <strong>Meta Quest 3</strong> development.</p>
+      <p class="rv">I've shipped titles across <strong>racing, FPS, simulation and casual</strong> genres, and was promoted to <strong>Team Lead</strong> six months into my role at Gamican — mentoring the team and owning code quality.</p>
+      <p class="rv">At <strong>Algoryte</strong> I build in both engines: an XR car configurator on Quest 3, a cinematic architectural walkthrough in Unreal, and features for the live card game <strong>Hamieverse</strong>.</p>
     </div>
     <div class="counters">
-      <div class="counter rv"><b data-count="3">0</b><b>+</b><span>Years experience</span></div>
-      <div class="counter rv"><b data-count="30">0</b><b>+</b><span>Games & sims built</span></div>
+      <div class="counter rv"><b data-count="4">0</b><b>+</b><span>Years experience</span></div>
+      <div class="counter rv"><b data-count="30">0</b><b>+</b><span>Titles worked on</span></div>
       <div class="counter rv"><b data-count="6">0</b><span>Studios</span></div>
-      <div class="counter rv"><b data-count="2">0</b><span>Engines mastered</span></div>
+      <div class="counter rv"><b data-count="2">0</b><span>Unity certifications</span></div>
     </div>
   </div>
 </section>
@@ -344,56 +375,31 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
   <div class="cards">
     <div class="card rv"><span class="k">[Q]</span>
       <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="14" width="36" height="22" rx="11"/><path d="M15 21v8M11 25h8"/><circle cx="31" cy="23" r="2"/><circle cx="35" cy="27" r="2"/></svg>
-      <h3>Gameplay Systems</h3><p>Controllers, UI flows, inventory, save systems, combat, vehicles and physics-driven interactions.</p></div>
+      <h3>Gameplay Systems</h3><p>C# gameplay programming — controllers, vehicles, combat, missions, UI flows and save systems.</p></div>
     <div class="card rv"><span class="k">[W]</span>
-      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 38 18 24l8 8 16-20"/><path d="M34 12h8v8"/></svg>
-      <h3>Optimization</h3><p>Profiling, memory management and frame-rate improvements to keep builds smooth on low-end devices.</p></div>
-    <div class="card rv"><span class="k">[E]</span>
       <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h36v14a4 4 0 0 1-4 4h-8l-6-6-6 6h-8a4 4 0 0 1-4-4z"/><circle cx="15" cy="26" r="3"/><circle cx="33" cy="26" r="3"/></svg>
-      <h3>VR / AR / XR</h3><p>Immersive simulations and interactive applications with intuitive object manipulation.</p></div>
+      <h3>XR / VR / AR</h3><p>Meta Quest 3 experiences — real-time configurators and interactive object manipulation.</p></div>
+    <div class="card rv"><span class="k">[E]</span>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="12" width="28" height="24" rx="3"/><path d="m33 20 10-6v20l-10-6"/></svg>
+      <h3>Cinematics &amp; Archviz</h3><p>Spline-based cinematic walkthroughs and guided tours in Unreal Engine.</p></div>
     <div class="card rv"><span class="k">[R]</span>
       <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="14" y="4" width="20" height="40" rx="4"/><path d="M21 38h6"/><path d="M20 14h8v8h-8z"/></svg>
-      <h3>Mobile & SDKs</h3><p>Android integration, Firebase, AdMob and third-party SDKs — production ready.</p></div>
+      <h3>Mobile &amp; SDKs</h3><p>Android integration, Firebase, AdMob and third-party SDKs — production ready.</p></div>
     <div class="card rv"><span class="k">[T]</span>
-      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M28 8a10 10 0 0 0-12 13L6 31l5 5 10-10a10 10 0 0 0 13-12l-6 6-5-1-1-5z"/></svg>
-      <h3>Tools & Pipelines</h3><p>Custom editor tools for designers, Git/GitHub workflows and CI/CD build pipelines.</p></div>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11 11l4 4M33 33l4 4M11 37l4-4M33 15l4-4"/><circle cx="24" cy="24" r="6"/></svg>
+      <h3>UI, Particles &amp; Animation</h3><p>UI system integration, particle effects and animation that make games feel polished.</p></div>
     <div class="card rv"><span class="k">[Y]</span>
       <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h12M24 10v6"/><rect x="12" y="16" width="24" height="24" rx="8"/><path d="M12 26H6M42 26h-6M12 34l-5 4M36 34l5 4"/></svg>
-      <h3>Debug & Maintenance</h3><p>Fixing legacy code, upgrading engine versions and stabilizing builds for release.</p></div>
+      <h3>Upgrades &amp; Maintenance</h3><p>Engine upgrades (UE 5.3 → 5.6), refactoring live codebases and stabilizing builds.</p></div>
   </div>
 </section>
 
 <!-- PROJECTS -->
 <section id="work">
   <div class="sec-head"><span class="sec-num">02 //</span><h2 class="sec-title split">SELECT LEVEL</h2><span class="sec-line"></span></div>
-  <div class="projects">
-    <article class="proj rv" data-tilt>
-      <div class="thumb"><canvas data-scene="bubbles"></canvas><span class="lvl">LVL 01</span></div>
-      <div class="proj-body">
-        <h3>3D Cleaning Game</h3>
-        <p>Unity gameplay development — satisfying tool-based cleaning mechanics, surface interaction and real-time visual feedback.</p>
-        <div class="chips"><span class="chip">Unity</span><span class="chip">C#</span><span class="chip">Interaction</span><span class="chip">Mobile</span></div>
-      </div>
-    </article>
-    <article class="proj rv" data-tilt>
-      <div class="thumb"><canvas data-scene="waves"></canvas><span class="lvl">LVL 02</span></div>
-      <div class="proj-body">
-        <h3>PM Ship — Prime Minister Simulator</h3>
-        <p>Political management sim — balance popularity, economy, policy and cabinet decisions across the country map.</p>
-        <div class="chips"><span class="chip">Unity</span><span class="chip">Strategy</span><span class="chip">Simulation</span></div>
-      </div>
-    </article>
-    <article class="proj rv" data-tilt>
-      <div class="thumb"><canvas data-scene="road"></canvas><span class="lvl">LVL 03</span></div>
-      <div class="proj-body">
-        <h3>3D Mobile Simulation Games</h3>
-        <p>A series of vehicle and driving simulators — bus, truck, parking and stunt games built and shipped for Android.</p>
-        <div class="chips"><span class="chip">Unity</span><span class="chip">Vehicles</span><span class="chip">AdMob</span><span class="chip">Firebase</span></div>
-      </div>
-    </article>
-  </div>
+  <div class="projects" id="projects"></div>
 
-  <h3 class="subhead rv">// SHIPPED & CONTRIBUTED TITLES</h3>
+  <h3 class="subhead rv">// SHIPPED &amp; CONTRIBUTED TITLES</h3>
   <div class="titles rv" id="titles"></div>
 </section>
 
@@ -402,19 +408,19 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
   <div class="sec-head"><span class="sec-num">03 //</span><h2 class="sec-title split">CAMPAIGN MODE</h2><span class="sec-line"></span></div>
   <div class="timeline" id="timeline">
     <div class="tl-fill" id="tlFill"></div>
-    <div class="tl rv rv-l"><div class="tl-top"><h3>Algoryte<small>Unity & Unreal Developer</small></h3><time>Sep 2024 — Aug 2026</time></div>
-      <p>Multiple Unity and Unreal projects — 3D games, VR/AR experiences, simulations and interactive apps across racing, FPS, RPG and multiplayer. Gameplay, controls, UI, physics, optimization, and SDK integration (Firebase, AdMob).</p></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>Algoryte<small>Unity &amp; Unreal Game Developer</small></h3><time>Sep 2024 — Present</time></div>
+      <p>Hamieverse (Unity) — features and core gameplay refactors for a live title. Alboum (Unreal, Quest 3) — real-time XR car configurator. Ponte (Unreal) — spline-based cinematic building walkthrough. Polker — UI/features and an engine upgrade from UE 5.3 to 5.6. Plus in-house R&amp;D like Exofarm.</p></div>
+    <div class="tl rv rv-l"><div class="tl-top"><h3>X-One Games<small>Unity Developer (Remote)</small></h3><time>Mar 2023 — Apr 2025</time></div>
+      <p>Led Urban Pursuit – Cop vs. Robber from concept to execution, directed FPS development on BioFire – Uprising Warzone, and built core combat for BioFire – Blood Fight.</p></div>
     <div class="tl rv rv-l"><div class="tl-top"><h3>Pyra Games (Idrak AI)<small>Unity Developer</small></h3><time>Oct 2023 — Apr 2024</time></div>
-      <p>Gameplay, UI and mechanics for shipped mobile titles: Beaky Chicky, Ramp Ball Balance 3D, Bus Simulator, Monster Truck Ball Game and Cruise Ship Simulator 3D.</p></div>
-    <div class="tl rv rv-l"><div class="tl-top"><h3>X-One Games<small>Unity Developer</small></h3><time>Mar 2023 — Apr 2025</time></div>
-      <p>3D games and simulations including Urban Pursuit – Cop vs. Robber and the BioFire series. FPS mechanics, levels, vehicles and combat.</p></div>
+      <p>Gameplay, UI and mechanics across 5 shipped mobile titles: Beaky Chicky, Ramp Ball Balance 3D, Bus Simulator, Monster Truck Ball Game and Cruise Ship Simulator 3D.</p></div>
     <div class="tl rv rv-l"><div class="tl-top"><h3>Gamican Pvt. Limited<small>Unity Developer → Team Lead</small></h3><time>Oct 2022 — Dec 2023</time></div>
-      <p>Promoted to Team Lead after 6 months. Led development, reviewed code and supported the team on Army Commando Shooting, Car Crash Simulator, Bike Stunt Trail 3D, Dino Hunter and more.</p>
+      <p>Promoted to Team Lead after 6 months; mentored teammates, monitored code quality and resolved team conflicts. Shipped Army Commando Shooting, Car Crash Simulator, Bike Stunt Trail, Dino Hunter, City Bus Simulator and Prado Car Parking Simulator.</p>
       <span class="badge">★ PROMOTION UNLOCKED</span></div>
     <div class="tl rv rv-l"><div class="tl-top"><h3>The Game Diversion Studio<small>Unity 3D Developer</small></h3><time>Mar 2022 — Sep 2022</time></div>
-      <p>Simulation and gameplay projects: Weed Farm and Shop, Surgical Simulator, Construction Simulator and Long Road Drive Simulation.</p></div>
+      <p>Weed Farm and Shop, Surgical Simulator, Construction Simulator and Long Road Drive Simulation.</p></div>
     <div class="tl rv rv-l"><div class="tl-top"><h3>CANZ Studio<small>Unity Developer</small></h3><time>Sep 2021 — Apr 2022</time></div>
-      <p>Built and updated mobile games including Car Parking Simulator and Cargo Truck Simulator — features, mechanics and bug fixes.</p></div>
+      <p>Delivered updates to Car Parking Simulator and Cargo Truck Simulator — features, mechanics and bug fixes.</p></div>
   </div>
 </section>
 
@@ -435,8 +441,11 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
   <div class="sec-head"><span class="sec-num">04.5 //</span><h2 class="sec-title split">ACHIEVEMENTS</h2><span class="sec-line"></span></div>
   <div class="achv-grid">
     <div class="achv rv"><div class="trophy">🏆</div><div><h4>Unity Junior Programmer</h4><p>Unity Technologies</p><small>UNLOCKED · DEC 2021</small></div></div>
-    <div class="achv rv"><div class="trophy">🎓</div><div><h4>BS Computer Science</h4><p>University of Arid Agriculture, Rawalpindi</p><small>UNLOCKED · 2015 – 2019</small></div></div>
+    <div class="achv rv"><div class="trophy">🏆</div><div><h4>Unity Creative Core</h4><p>Unity Technologies</p><small>UNLOCKED · FEB 2022</small></div></div>
+    <div class="achv rv"><div class="trophy">🎓</div><div><h4>BS Computer Science</h4><p>PMAS Arid Agriculture University, Rawalpindi</p><small>UNLOCKED · 2019</small></div></div>
     <div class="achv rv"><div class="trophy">⚔️</div><div><h4>Team Lead</h4><p>Promoted within 6 months at Gamican</p><small>UNLOCKED · 2023</small></div></div>
+    <div class="achv rv"><div class="trophy">🥽</div><div><h4>Reality Bender</h4><p>Real-time XR car configurator on Meta Quest 3</p><small>UNLOCKED · ALGORYTE</small></div></div>
+    <div class="achv rv"><div class="trophy">⚙️</div><div><h4>Engine Upgrade</h4><p>Migrated Polker from Unreal 5.3 to 5.6</p><small>UNLOCKED · ALGORYTE</small></div></div>
   </div>
 </section>
 
@@ -444,15 +453,26 @@ footer{border-top:1px solid var(--line);padding:26px clamp(16px,4vw,48px);displa
 <section id="contact">
   <div class="sec-head" style="justify-content:center"><span class="sec-num">05 //</span><h2 class="sec-title split">CO-OP MODE</h2></div>
   <div class="go rv"><span class="glitch" data-text="PLAYER 2">PLAYER 2</span><span class="outline">READY?</span></div>
-  <p class="rv">Need a full game build, a specific mechanic, or performance tuning? Let's build it together.</p>
+  <p class="rv">Need a full game, a specific mechanic, an XR experience or performance tuning? I'm open to freelance, contract and full-time roles.</p>
   <div class="btns center rv">
-    <a href="https://www.upwork.com/freelancers/~01c65dceca1470499b" target="_blank" rel="noopener" class="btn btn-primary" data-hover>▶ Invite on Upwork</a>
-    <a href="#hero" class="btn btn-ghost" data-hover>↺ Restart</a>
+    <a href="mailto:mdaniyaljanjua@gmail.com" class="btn btn-primary" data-hover>✉ Email me</a>
+    <a href="https://wa.me/923115070737?text=Hi%20Daniyal%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener" class="btn btn-wa" data-hover>WhatsApp</a>
+    <a href="https://www.linkedin.com/in/dani737/" target="_blank" rel="noopener" class="btn btn-ghost" data-hover>LinkedIn</a>
+    <a href="https://www.upwork.com/freelancers/~01c65dceca1470499b" target="_blank" rel="noopener" class="btn btn-ghost" data-hover>Upwork</a>
+    <a href="Daniyal_Resume.pdf" download="Muhammad-Daniyal-CV.pdf" class="btn btn-ghost" data-hover>⬇ CV</a>
   </div>
 </section>
 </main>
 
-<footer><span>© <span id="yr"></span> Daniyal J. — Unity & Unreal Developer</span><span>Built with ❤ & 60 FPS</span></footer>
+<footer><span>© <span id="yr"></span> Muhammad Daniyal · <a href="mailto:mdaniyaljanjua@gmail.com">mdaniyaljanjua@gmail.com</a> · WhatsApp +92 311 5070737</span><span><a href="index.html" data-hover>← Switch to console theme</a></span></footer>
+
+<div class="nmodal" id="nmodal" role="dialog" aria-modal="true" aria-label="Trailer">
+  <div class="nm-box">
+    <div class="nm-head"><span id="nmLvl">LVL 01</span><h3 id="nmTitle"></h3><a id="nmLink" target="_blank" rel="noopener" data-hover>WEBSITE ↗</a><button id="nmPrev" data-hover>◀</button><button id="nmNext" data-hover>▶</button><button id="nmClose" data-hover>✕ ESC</button></div>
+    <div class="nm-media" id="nmMedia"></div>
+  </div>
+</div>
+
 
 <div class="toast" id="toast"><div class="trophy">🏆</div><div><b>ACHIEVEMENT UNLOCKED</b><span id="toastText">Explorer</span></div></div>
 
@@ -485,7 +505,7 @@ addEventListener('keydown', () => p >= 100 && start());
 $('#loader').addEventListener('click', () => p >= 100 && start());
 
 /* ---------- Typed roles ---------- */
-const roles = ['Unity Developer · C#','Unreal Engine Developer · C++','Gameplay Systems Engineer','VR / AR / XR Builder','Performance Optimizer'];
+const roles = ['Unity Developer · C#','Unreal Engine Developer','Meta Quest 3 XR Developer','Gameplay & UI Programmer','Spline Cinematics · Archviz'];
 let ri = 0, ci = 0, del = false;
 function typeLoop(){
   const w = roles[ri];
@@ -498,15 +518,73 @@ function typeLoop(){
 }
 
 /* ---------- Marquee ---------- */
-const mq = ['UNITY','<em>✦</em>','UNREAL ENGINE','<em>✦</em>','C#','<em>✦</em>','C++','<em>✦</em>','VR / AR','<em>✦</em>','GAMEPLAY','<em>✦</em>','OPTIMIZATION','<em>✦</em>','MOBILE','<em>✦</em>'];
+const mq = ['UNITY','<em>✦</em>','UNREAL ENGINE','<em>✦</em>','C#','<em>✦</em>','C++','<em>✦</em>','XR · QUEST 3','<em>✦</em>','CINEMATICS','<em>✦</em>','GAMEPLAY','<em>✦</em>','OPTIMIZATION','<em>✦</em>','MOBILE','<em>✦</em>'];
 $('#marquee').innerHTML = [...mq, ...mq].map(t => `<span>${t}</span>`).join('');
 
 /* ---------- Titles ---------- */
-const titles = ['Beaky Chicky','Ramp Ball Balance 3D','Bus Simulator','Monster Truck Ball Game','Cruise Ship Simulator 3D','Urban Pursuit – Cop vs. Robber','BioFire – Uprising Warzone','BioFire – Blood Fight','Army Commando Shooting','Car Crash Simulator','Bike Stunt Trail 3D','Dino Hunter','City Bus Simulator','Prado Car Parking Simulator','Weed Farm and Shop','Surgical Simulator','Construction Simulator','Long Road Drive Simulation','Car Parking Simulator','Cargo Truck Simulator'];
+const titles = ['Beaky Chicky','Ramp Ball Balance 3D','Bus Simulator','Monster Truck Ball Game','Cruise Ship Simulator 3D','Urban Pursuit – Cop vs. Robber','BioFire – Uprising Warzone','BioFire – Blood Fight','Army Commando Shooting','Car Crash Simulator','Bike Stunt Trail: 3D Racing','Dino Hunter','City Bus Simulator','Prado Car Parking Simulator','Weed Farm and Shop','Surgical Simulator','Construction Simulator','Long Road Drive Simulation','Car Parking Simulator','Cargo Truck Simulator'];
 $('#titles').innerHTML = titles.map(t => `<span data-hover>🎮 ${t}</span>`).join('');
 
+/* ---------- Projects (same data as the console theme) ---------- */
+const games = [
+  {id:'hamieverse', t:'Hamieverse', st:'Algoryte', eng:'Unity', plat:'Live title', tags:['Unity','Card Game','Live'], yt:'BaMdblEG8-M', link:'https://www.hamieverse.com/', d:'NFT card-combat game (Hamieverse TCG). Added new features and refactored core gameplay code for a live, actively-played title.'},
+  {id:'alboum', t:'Alboum – XR Lexus Configurator', st:'Algoryte', eng:'Unreal Engine', plat:'Meta Quest 3', tags:['Unreal','XR','Quest 3'], yt:'eNZ-DWnp_W8', d:'Real-time XR car configurator on Meta Quest 3 — inspect, customise and interact with multiple Lexus vehicle models in mixed reality.'},
+  {id:'ponte', t:'Ponte', st:'Algoryte', eng:'Unreal Engine', plat:'PC', tags:['Unreal','Cinematic','PC'], d:'Spline-based cinematic walkthrough of a building for a client case study — guided in-tour navigation, info panels with drawings and photography, and multilingual settings.'},
+  {id:'biofire', t:'BioFire – Uprising Warzone', st:'X-One Games', eng:'Unity', plat:'Android', tags:['Unity','FPS','Mobile'], d:'Directed FPS development: weapon loadouts (SCAR, Carbine, MP5), story, free and open-world modes, and dynamic urban levels built for solo play.'},
+  {id:'cop-chase', t:'Urban Pursuit – Cop vs. Robber', st:'X-One Games', eng:'Unity', plat:'Android', tags:['Unity','Driving','Mobile'], d:'Led the creation of this police car simulator from concept to execution — mission mode, pursuit gameplay through an open city, and star-rated level completion.'},
+  {id:'cleaning', t:'Perfect Cleaning ASMR', st:'Mobile casual', eng:'Unity', plat:'Android · iOS', tags:['Unity','Casual','Mobile'], d:'Tool-based ASMR cleaning game. Scraper, brush, sponge, pressure washer and cloth each peel a layer of dirt for a satisfying, step-by-step restoration.'},
+  {id:'monster-truck', t:'Monster Truck Ball Game', st:'Pyra Games (Idrak AI)', eng:'Unity', plat:'Android', tags:['Unity','Sports','Mobile'], d:'Car-soccer with monster trucks: a truck garage, free mode plus 1v1 and 3v3 matches in a stadium arena, with boost and on-screen driving controls.'},
+  {id:'bus', t:'Bus Simulator', st:'Pyra Games (Idrak AI)', eng:'Unity', plat:'Android', tags:['Unity','Simulation','Mobile'], d:'City bus driving sim with mode selection, a guided tutorial hosted by a conductor character, refuelling stations and passenger missions.'},
+  {id:'long-drive', t:'Long Road Drive Simulation', st:'The Game Diversion Studio', eng:'Unity', plat:'Android', tags:['Unity','Simulation','Driving'], d:'Road-trip survival drive across the desert — interactive car parts and doors, car upgrades for speed, handling and braking, and journey progress tracking.'},
+  {id:'pmship', t:'PM Ship', st:'Strategy simulation', eng:'Unity', plat:'Mobile', tags:['Unity','Strategy','Simulation'], d:'Run the country as Prime Minister: balance popularity and influence across economy, policy-making, cabinet, national assembly and media, with event-card decisions.'},
+  {id:'hospital', t:'Hospital Simulator', st:'Simulation', eng:'Unity', plat:'Android', tags:['Unity','Simulation','Mobile'], d:'Case-file based patient journey — reception, emergency ward and nurse NPC dialogue, with guided waypoints and vitals checks.'},
+  {id:'boat-cargo', t:'City Boat Cargo', st:'Simulation', eng:'Unity', plat:'Android', tags:['Unity','Simulation','Mobile'], d:'Boat and ship simulator with a ship garage, wheel-and-throttle controls and dock-to-dock cargo missions across open water.'},
+  {id:'baby-care', t:'Baby Care', st:'The Game Diversion Studio', eng:'Unity', plat:'Android · iOS', tags:['Unity','Casual','Mobile'], d:'Day-by-day baby care game — bathing, diapers and toy-matching mini-games with satisfying progress meters and celebrations.'},
+  {id:'beaky', t:'Beaky Chicky', st:'Pyra Games (Idrak AI)', eng:'Unity', plat:'Android', tags:['Unity','Platformer','Mobile'], d:'Colourful 2D platformer: run and jump through desert levels, dodge enemies, collect chicks and race the clock to the exit door.'}
+];
+games.forEach(g => g.p = g.id === 'cleaning' || g.id === 'baby-care');
+const hoverable = matchMedia('(hover:hover)').matches;
+const ytImg = g => `https://i.ytimg.com/vi/${g.yt}/maxresdefault.jpg`;
+const lvl = i => 'LVL ' + String(i+1).padStart(2,'0');
+$('#projects').innerHTML = games.map((g,i) => `
+  <article class="proj rv" data-tilt data-i="${i}" tabindex="0" aria-label="Play ${g.t} trailer">
+    <div class="thumb"><img src="${g.yt ? ytImg(g) : `media/${g.id}.jpg`}" alt="${g.t} gameplay" loading="lazy">
+      ${!g.yt && hoverable && !reduce ? `<video class="${g.p?'contain':''}" muted loop playsinline preload="none" data-src="media/${g.id}-loop.mp4"></video>` : ''}
+      <span class="lvl">${lvl(i)}</span><span class="play">▶ ${g.yt ? 'YOUTUBE' : 'PLAY TRAILER'}</span></div>
+    <div class="proj-body"><h3>${g.t}</h3><div class="studio">${g.st} · ${g.eng} · ${g.plat}</div><p>${g.d}</p>
+      <div class="chips">${g.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div></div>
+  </article>`).join('');
+$$('.proj').forEach(card => {
+  const v = card.querySelector('video');
+  card.addEventListener('click', () => openTrailer(+card.dataset.i));
+  card.addEventListener('keydown', e => { if (e.key === 'Enter') openTrailer(+card.dataset.i); });
+  if (v){
+    card.addEventListener('mouseenter', () => { if (!v.src){ v.src = v.dataset.src; v.addEventListener('playing', () => v.classList.add('ready'), {once:true}); } v.play().catch(()=>{}); });
+    card.addEventListener('mouseleave', () => v.pause());
+  }
+});
+
+/* ---------- Trailer modal ---------- */
+let mi = 0;
+function openTrailer(i){
+  mi = (i + games.length) % games.length; const g = games[mi];
+  $('#nmLvl').textContent = lvl(mi); $('#nmTitle').textContent = g.t;
+  $('#nmLink').style.display = g.link ? '' : 'none'; if (g.link) $('#nmLink').href = g.link;
+  $('#nmMedia').innerHTML = g.yt
+    ? `<iframe src="https://www.youtube-nocookie.com/embed/${g.yt}?autoplay=1&rel=0&modestbranding=1&playsinline=1" title="${g.t}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`
+    : `<video src="media/${g.id}.mp4" poster="media/${g.id}.jpg" controls autoplay playsinline></video>`;
+  $('#nmodal').classList.add('open'); document.body.style.overflow = 'hidden';
+}
+function closeTrailer(){ $('#nmMedia').innerHTML = ''; $('#nmodal').classList.remove('open'); document.body.style.overflow = ''; }
+$('#nmClose').onclick = closeTrailer;
+$('#nmPrev').onclick = () => openTrailer(mi-1);
+$('#nmNext').onclick = () => openTrailer(mi+1);
+$('#nmodal').addEventListener('click', e => { if (e.target.id === 'nmodal') closeTrailer(); });
+addEventListener('keydown', e => { if (!$('#nmodal').classList.contains('open')) return;
+  if (e.key === 'Escape') closeTrailer(); if (e.key === 'ArrowRight') openTrailer(mi+1); if (e.key === 'ArrowLeft') openTrailer(mi-1); });
+
 /* ---------- Inventory ---------- */
-const inv = [['Unity','U','legendary','LEG'],['C#','C#','legendary','LEG'],['Unreal Engine','UE','epic','EPC'],['C++','++','epic','EPC'],['Game Development','GD','legendary','LEG'],['Game Design','◈','epic','EPC'],['Game Prototype','⚡','rare','RAR'],['Bug Fixing','⚙','rare','RAR'],['VR / AR / XR','VR','epic','EPC'],['Physics','Φ','rare','RAR'],['Firebase · AdMob','🔥','rare','RAR'],['Git / CI-CD','⎇','common','COM'],['Arcade Games','👾','common','COM'],['Board Games','♟','common','COM'],['Solution Oriented','✔','rare','RAR']];
+const inv = [['Unity','U','legendary','LEG'],['C#','C#','legendary','LEG'],['Unreal Engine','UE','epic','EPC'],['XR · Quest 3','VR','epic','EPC'],['Gameplay Programming','GP','legendary','LEG'],['UI Integration','UI','rare','RAR'],['Spline Cinematics','🎬','epic','EPC'],['Particles & Animation','✨','rare','RAR'],['Game & Level Design','◈','epic','EPC'],['Optimization','⚡','rare','RAR'],['Firebase · AdMob','🔥','rare','RAR'],['C++','++','rare','RAR'],['Git / GitHub','⎇','common','COM'],['Team Lead','★','legendary','LEG'],['Bug Fixing','⚙','common','COM']];
 $('#inv').innerHTML = inv.map(([n,g,r,t]) => `<div class="slot rv ${r}" data-r="${t}" data-hover><span class="glyph">${g}</span><b>${n}</b></div>`).join('');
 
 /* ---------- Split headings ---------- */
@@ -625,51 +703,6 @@ function frame(){
 let scrollVel = 0, lastY = scrollY;
 addEventListener('scroll', () => { scrollVel = Math.min(40, Math.abs(scrollY-lastY)*.6); lastY = scrollY; }, {passive:true});
 if (!reduce) frame(); else { ctx.fillStyle='#05060d'; ctx.fillRect(0,0,W,H); }
-
-/* ---------- Project thumbnails: mini procedural scenes ---------- */
-const scenes = $$('[data-scene]').map(c => ({ c, x: c.getContext('2d'), type: c.dataset.scene, vis: false }));
-const tio = new IntersectionObserver(es => es.forEach(e => { scenes.find(s => s.c === e.target).vis = e.isIntersecting; }));
-scenes.forEach(s => tio.observe(s.c));
-const bubbles = Array.from({length:26}, () => ({x:Math.random(), y:Math.random(), r:Math.random()*14+4, v:Math.random()*.004+.002}));
-function thumbs(ts){
-  scenes.forEach(({c,x,type,vis}) => {
-    if (!vis) return;
-    const w = c.width = c.clientWidth*DPR, h = c.height = c.clientHeight*DPR, T = ts/1000;
-    if (type === 'bubbles'){
-      const g = x.createLinearGradient(0,0,w,h); g.addColorStop(0,'#081a2a'); g.addColorStop(1,'#1a0a2a'); x.fillStyle = g; x.fillRect(0,0,w,h);
-      x.strokeStyle='rgba(0,240,255,.15)'; for (let i=0;i<w;i+=30*DPR){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,h); x.stroke(); }
-      const sx = w*(.5+.35*Math.sin(T*1.2)), sy = h*(.55+.2*Math.cos(T*1.7));
-      x.fillStyle='rgba(182,255,59,.12)'; x.beginPath(); x.ellipse(sx,sy,60*DPR,26*DPR,0,0,7); x.fill();
-      bubbles.forEach(b => { b.y -= b.v; if (b.y < -.1) { b.y = 1.1; b.x = Math.random(); }
-        x.strokeStyle='rgba(255,255,255,.55)'; x.lineWidth=1.2*DPR; x.beginPath(); x.arc(b.x*w + Math.sin(T*2+b.r)*6, b.y*h, b.r*DPR, 0, 7); x.stroke();
-        x.fillStyle='rgba(0,240,255,.12)'; x.fill(); });
-    } else if (type === 'waves'){
-      const g = x.createLinearGradient(0,0,0,h); g.addColorStop(0,'#1a0a2a'); g.addColorStop(.5,'#3a0f3a'); g.addColorStop(1,'#04121f'); x.fillStyle = g; x.fillRect(0,0,w,h);
-      x.fillStyle='#ffb020'; x.shadowColor='#ff2bd6'; x.shadowBlur=30*DPR; x.beginPath(); x.arc(w*.7,h*.45,28*DPR,0,7); x.fill(); x.shadowBlur=0;
-      for (let L=0; L<5; L++){ x.strokeStyle=`rgba(0,240,255,${.25+L*.12})`; x.lineWidth=1.3*DPR; x.beginPath();
-        for (let i=0;i<=w;i+=6){ const y = h*(.55+L*.09) + Math.sin(i/(40*DPR)+T*(1.2+L*.3)+L)*(5+L*2)*DPR; i?x.lineTo(i,y):x.moveTo(i,y); } x.stroke(); }
-      const bx = w*.35, by = h*.58 + Math.sin(T*1.5)*5*DPR, rk = Math.sin(T*1.5)*.06;
-      x.save(); x.translate(bx,by); x.rotate(rk); x.fillStyle='#e6e9ff';
-      x.beginPath(); x.moveTo(-60*DPR,0); x.lineTo(60*DPR,0); x.lineTo(45*DPR,16*DPR); x.lineTo(-50*DPR,16*DPR); x.fill();
-      x.fillRect(-30*DPR,-20*DPR,40*DPR,20*DPR); x.fillStyle='#ff2bd6'; x.fillRect(-6*DPR,-36*DPR,10*DPR,16*DPR); x.restore();
-    } else {
-      x.fillStyle='#07091a'; x.fillRect(0,0,w,h);
-      const hz = h*.42; const g = x.createLinearGradient(0,0,0,hz); g.addColorStop(0,'#0a0d2a'); g.addColorStop(1,'#3a0f3a'); x.fillStyle=g; x.fillRect(0,0,w,hz);
-      x.fillStyle='rgba(0,0,0,.6)'; for (let i=0;i<w;i+=26*DPR){ const bh = (Math.sin(i*.37)*.5+.5)*50*DPR+15*DPR; x.fillRect(i,hz-bh,22*DPR,bh); }
-      x.strokeStyle='#ff2bd6'; x.lineWidth=1.5*DPR; x.shadowColor='#ff2bd6'; x.shadowBlur=10*DPR;
-      x.beginPath(); x.moveTo(w*.5,hz); x.lineTo(w*.05,h); x.moveTo(w*.5,hz); x.lineTo(w*.95,h); x.stroke();
-      x.strokeStyle='#00f0ff'; x.shadowColor='#00f0ff';
-      for (let i=0;i<10;i++){ const k = ((i/10 + T*.8) % 1); const y = hz + Math.pow(k,2)*(h-hz); const half = (y-hz)/(h-hz)*w*.45;
-        x.globalAlpha = k; x.beginPath(); x.moveTo(w*.5-half,y); x.lineTo(w*.5+half,y); x.stroke(); }
-      x.globalAlpha=1; x.shadowBlur=0;
-      const cxp = w*.5 + Math.sin(T*1.3)*w*.1, cyp = h*.82;
-      x.fillStyle='#b6ff3b'; x.shadowColor='#b6ff3b'; x.shadowBlur=16*DPR; x.fillRect(cxp-22*DPR,cyp-10*DPR,44*DPR,20*DPR); x.shadowBlur=0;
-      x.fillStyle='#ff2bd6'; x.fillRect(cxp-20*DPR,cyp+6*DPR,10*DPR,4*DPR); x.fillRect(cxp+10*DPR,cyp+6*DPR,10*DPR,4*DPR);
-    }
-  });
-  requestAnimationFrame(thumbs);
-}
-requestAnimationFrame(thumbs);
 
 /* ---------- Konami code easter egg ---------- */
 const kon = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']; let ki = 0;

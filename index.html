@@ -42,7 +42,7 @@ h1,h2,h3,h4{font-family:Sora,sans-serif;letter-spacing:-.02em;line-height:1.1}
 /* ================= HOME (futuristic stage) ================= */
 :root{--acc:#3d8bff}
 #home{position:relative;min-height:100vh;min-height:100svh;overflow:hidden;isolation:isolate;display:flex}
-.aurora{position:absolute;inset:-20%;z-index:-4;filter:blur(90px);opacity:.7;pointer-events:none}
+.aurora{position:absolute;inset:-20%;z-index:-4;filter:blur(100px);opacity:.5;pointer-events:none}
 .aurora i{position:absolute;border-radius:50%;mix-blend-mode:screen}
 .aurora i:nth-child(1){width:55vw;height:55vw;left:42%;top:0;background:radial-gradient(circle,var(--acc),transparent 62%);transition:background 1.4s;animation:drift1 18s ease-in-out infinite alternate}
 .aurora i:nth-child(2){width:45vw;height:45vw;left:0;top:38%;background:radial-gradient(circle,#4c1d95,transparent 62%);animation:drift2 22s ease-in-out infinite alternate}
@@ -712,7 +712,7 @@ addEventListener('scroll', () => {
   $('#stage').style.opacity = 1 - k*1.3;
 }, {passive:true});
 
-/* ---------------- WebGL background (three.js) ---------------- */
+/* ---------------- WebGL background (three.js): a calm "game-dev workspace" ---------------- */
 (function(){
   if (!window.THREE || reduce) return;
   const cv = $('#gl');
@@ -720,31 +720,88 @@ addEventListener('scroll', () => {
   try { renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true}); } catch(e){ return; }
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x03081a, .045);
-  const cam = new THREE.PerspectiveCamera(60, 1, .1, 200);
-  cam.position.set(0, 4.5, 16);
+  scene.fog = new THREE.Fog(0x050b22, 10, 46);
+  const cam = new THREE.PerspectiveCamera(55, 1, .1, 200);
+  cam.position.set(0, 3.2, 16);
 
-  // undulating particle terrain
-  const NX = 150, NZ = 70, SP = .5;
-  const pos = new Float32Array(NX*NZ*3);
-  for (let i=0;i<NX;i++) for (let j=0;j<NZ;j++){ const k = (i*NZ+j)*3; pos[k] = (i-NX/2)*SP; pos[k+2] = -j*SP + 8; }
-  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const mat = new THREE.PointsMaterial({size:.065, color:0x3d8bff, transparent:true, opacity:.95, depthWrite:false, blending:THREE.AdditiveBlending});
-  const field = new THREE.Points(geo, mat); field.position.y = -3.4; scene.add(field);
+  // editor-style blueprint grid: fine lines + major lines every 5 units
+  const grid = new THREE.Group(); grid.position.y = -3.2; scene.add(grid);
+  const fine = new THREE.GridHelper(120, 120, 0x3d8bff, 0x3d8bff);
+  fine.material.transparent = true; fine.material.opacity = .08; grid.add(fine);
+  const major = new THREE.GridHelper(120, 24, 0x7cc4ff, 0x7cc4ff);
+  major.material.transparent = true; major.material.opacity = .2; grid.add(major);
+  // world axes on the floor, like a scene view origin
+  const axis = (c, a, b) => { const g = new THREE.BufferGeometry().setFromPoints([a, b]); return new THREE.Line(g, new THREE.LineBasicMaterial({color:c, transparent:true, opacity:.55})); };
+  grid.add(axis(0xff5c6c, new THREE.Vector3(-60,.01,0), new THREE.Vector3(60,.01,0)));
+  grid.add(axis(0x4f8dff, new THREE.Vector3(0,.01,-60), new THREE.Vector3(0,.01,60)));
 
-  // wireframe planet with orbit rings
-  const planet = new THREE.Group(); planet.position.set(11, 5, -26); scene.add(planet);
-  const ico = new THREE.Mesh(new THREE.IcosahedronGeometry(6.5, 2), new THREE.MeshBasicMaterial({color:0x3d8bff, wireframe:true, transparent:true, opacity:.14}));
-  planet.add(ico);
-  const ringMat = new THREE.MeshBasicMaterial({color:0x9bd2ff, transparent:true, opacity:.3});
-  const r1 = new THREE.Mesh(new THREE.TorusGeometry(10, .03, 8, 200), ringMat); r1.rotation.x = 1.25; planet.add(r1);
-  const r2 = new THREE.Mesh(new THREE.TorusGeometry(12.5, .02, 8, 200), ringMat); r2.rotation.x = 1.1; r2.rotation.y = .3; planet.add(r2);
+  // floating code panels with syntax highlighting
+  const snippets = [
+    ['// PlayerController.cs','public class PlayerController : MonoBehaviour','{','  [SerializeField] float speed = 6f;','  void Update() {','    var dir = new Vector3(h, 0, v);','    rb.velocity = dir * speed;','  }','}'],
+    ['// VehicleAI.cs','IEnumerator Chase(Transform target) {','  while (isActive) {','    agent.SetDestination(target.position);','    yield return new WaitForSeconds(.2f);','  }','}'],
+    ['// ConfiguratorPawn.h','UCLASS()','class AConfiguratorPawn : public APawn','{','  UFUNCTION(BlueprintCallable)','  void SetPaint(FLinearColor Color);','  UPROPERTY(EditAnywhere)','  USplineComponent* CameraRail;','};'],
+    ['// CardBattle.cs','async Task PlayCard(Card card) {','  await anim.Play("Attack");','  target.Health -= card.Damage;','  OnTurnEnd?.Invoke();','}'],
+    ['// Shader: Dissolve','float noise = tex2D(_Noise, i.uv).r;','clip(noise - _Cutoff);','float edge = step(noise, _Cutoff + .05);','col.rgb += edge * _GlowColor;'],
+    ['// SaveSystem.cs','public void Save(GameData data) {','  string json = JsonUtility.ToJson(data);','  File.WriteAllText(path, json);','}'],
+  ];
+  const KW = /\b(public|private|class|void|float|var|new|while|yield|return|async|await|string|struct|const|if|else)\b/g;
+  function panelTex(lines){
+    const W = 640, LH = 30, H = 46 + lines.length * LH;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    x.fillStyle = 'rgba(12,22,58,.5)'; x.strokeStyle = 'rgba(160,210,255,.45)'; x.lineWidth = 2;
+    x.beginPath(); x.roundRect ? x.roundRect(1, 1, W-2, H-2, 18) : x.rect(1, 1, W-2, H-2); x.fill(); x.stroke();
+    [['#ff5f57',22],['#febc2e',42],['#28c840',62]].forEach(([col,cx]) => { x.fillStyle = col; x.beginPath(); x.arc(cx, 20, 6, 0, 7); x.fill(); });
+    x.font = '19px "JetBrains Mono", Consolas, monospace'; x.textBaseline = 'top';
+    lines.forEach((ln, i) => {
+      const y = 40 + i * LH;
+      x.fillStyle = 'rgba(154,166,200,.45)'; x.fillText(String(i+1).padStart(2,' '), 16, y);
+      if (ln.trim().startsWith('//')){ x.fillStyle = '#6a9955'; x.fillText(ln, 56, y); return; }
+      // simple tokeniser: keywords, strings, numbers, types, plain
+      let px = 56;
+      ln.split(/(\s+|[(){};.,=<>\[\]"])/).filter(Boolean).forEach(tok => {
+        let col = '#d4dcff';
+        if (tok.match(KW)) col = '#c792ea';
+        else if (/^\d/.test(tok)) col = '#f78c6c';
+        else if (/^[A-Z][A-Za-z]+$/.test(tok)) col = '#82e0ff';
+        else if (/^[a-z]\w*$/.test(tok) && /\($/.test(ln.slice(ln.indexOf(tok) + tok.length, ln.indexOf(tok) + tok.length + 1))) col = '#ffcb6b';
+        else if (/[(){};.,=<>\[\]"]/.test(tok)) col = '#89ddff';
+        x.fillStyle = col; x.fillText(tok, px, y); px += x.measureText(tok).width;
+      });
+    });
+    const t = new THREE.CanvasTexture(c); t.anisotropy = 4;
+    return {t, aspect: W / H};
+  }
+  const spots = [[-21,9,-12],[11,7.4,-10],[-23,-2.2,-10],[16,-.6,-5],[-3,11.5,-20],[25,5,-16]];
+  const panels = snippets.map((lines, i) => {
+    const {t, aspect} = panelTex(lines);
+    const h = 3.4, m = new THREE.Mesh(new THREE.PlaneGeometry(h * aspect, h), new THREE.MeshBasicMaterial({map:t, transparent:true, opacity:.62, depthWrite:false, fog:false, side:THREE.DoubleSide}));
+    m.position.set(...spots[i]); m.rotation.y = -spots[i][0] * .025;
+    m.userData = {y: spots[i][1], ph: Math.random() * 6.28};
+    scene.add(m); return m;
+  });
 
-  // floating dust
-  const DN = 500, dp = new Float32Array(DN*3);
-  for (let i=0;i<DN*3;i+=3){ dp[i] = (Math.random()-.5)*70; dp[i+1] = Math.random()*24 - 3; dp[i+2] = -Math.random()*45 + 8; }
+  // Unity-style transform gizmo around a wireframe cube
+  const gizmo = new THREE.Group(); gizmo.position.set(10, 3.5, -9); scene.add(gizmo);
+  const cubeMat = new THREE.LineBasicMaterial({color:0x7cc4ff, transparent:true, opacity:.6, fog:false});
+  gizmo.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.2, 2.2, 2.2)), cubeMat));
+  [[0xff5c6c, new THREE.Vector3(1,0,0)], [0x7ee04a, new THREE.Vector3(0,1,0)], [0x4f8dff, new THREE.Vector3(0,0,1)]]
+    .forEach(([c, d]) => gizmo.add(new THREE.ArrowHelper(d, new THREE.Vector3(0,0,0), 2.6, c, .45, .25)));
+  const orbit = new THREE.Mesh(new THREE.TorusGeometry(2.4, .015, 6, 120), new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:.25}));
+  gizmo.add(orbit);
+
+  // a second, smaller selected object on the left — low-poly gem with a bounding box
+  const gem = new THREE.Group(); gem.position.set(-11, -1, -7); scene.add(gem);
+  const gemMat = new THREE.MeshBasicMaterial({color:0x3d8bff, wireframe:true, transparent:true, opacity:.5, fog:false});
+  const gemMesh = new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 0), gemMat); gem.add(gemMesh);
+  gem.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.6, 2.6, 2.6)), new THREE.LineDashedMaterial({color:0xffcb6b, dashSize:.2, gapSize:.15, transparent:true, opacity:.5})));
+  gem.children[1].computeLineDistances();
+
+  // soft drifting dust
+  const DN = 260, dp = new Float32Array(DN*3);
+  for (let i=0;i<DN*3;i+=3){ dp[i] = (Math.random()-.5)*60; dp[i+1] = Math.random()*18 - 3; dp[i+2] = -Math.random()*36 + 6; }
   const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
-  const dust = new THREE.Points(dg, new THREE.PointsMaterial({size:.06, color:0xffffff, transparent:true, opacity:.55, depthWrite:false}));
+  const dust = new THREE.Points(dg, new THREE.PointsMaterial({size:.05, color:0xbcd4ff, transparent:true, opacity:.45, depthWrite:false}));
   scene.add(dust);
 
   const target = new THREE.Color(0x3d8bff), col = new THREE.Color(0x3d8bff);
@@ -755,15 +812,17 @@ addEventListener('scroll', () => {
   (function loop(){
     requestAnimationFrame(loop);
     if (!glRun || document.hidden) return;
-    t += .012;
-    const a = geo.attributes.position.array;
-    for (let i=0;i<a.length;i+=3){ const x = a[i], z = a[i+2]; a[i+1] = Math.sin(x*.28 + t)*.55 + Math.cos(z*.35 + t*.8)*.45 + Math.sin((x+z)*.12 + t*.5)*.4; }
-    geo.attributes.position.needsUpdate = true;
-    col.lerp(target, .03); mat.color.copy(col); ico.material.color.copy(col);
-    ico.rotation.y += .0025; ico.rotation.x += .001; r1.rotation.z += .003; r2.rotation.z -= .002;
-    dust.rotation.y += .0005;
+    t += .01;
+    col.lerp(target, .03);
+    fine.material.color.copy(col); major.material.color.copy(col).lerp(new THREE.Color(0xffffff), .35);
+    cubeMat.color.copy(col).lerp(new THREE.Color(0xffffff), .3); gemMat.color.copy(col);
+    grid.position.z = (t * .8) % 5;                      // slow fly-over
+    gizmo.rotation.y = t * .25; gizmo.rotation.x = Math.sin(t * .3) * .25; orbit.rotation.x = t * .6;
+    gem.rotation.y = -t * .5; gemMesh.rotation.x = t * .3; gem.position.y = -1 + Math.sin(t) * .3;
+    panels.forEach(m => { m.position.y = m.userData.y + Math.sin(t * .6 + m.userData.ph) * .35; });
+    dust.rotation.y += .0004;
     cx += (mx*3 - cx) * .03; cy += (my*1.6 - cy) * .03;
-    cam.position.x = cx; cam.position.y = 4.5 - cy; cam.lookAt(0, 0, -6);
+    cam.position.x = cx; cam.position.y = 3.2 - cy; cam.lookAt(0, .5, -8);
     renderer.render(scene, cam);
   })();
 })();
